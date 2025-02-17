@@ -1,0 +1,82 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Create User{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #003366; /* Dark Blue */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px; /* Add space between fields */
+        }
+        .form-group label {
+            margin-bottom: 10px; /* Space between label and input field */
+            color: white; /* Optional: Make label text color white to contrast with dark blue */
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .btn-primary {
+            margin-top: 20px; /* Add space above the submit button */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Create User</h1>
+
+    {% if app.session.flashbag.has('success') %}
+        <div class="alert alert-success">
+            {{ app.session.flashbag.get('success')[0] }}
+        </div>
+    {% endif %}
+
+    {{ form_start(form) }}
+
+        <div class="form-group">
+            {{ form_label(form.Nom) }}
+            {{ form_widget(form.Nom) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.date_de_naissance) }}
+            {{ form_widget(form.date_de_naissance) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.role) }}
+            {{ form_widget(form.role) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.mot_de_passe) }}
+            {{ form_widget(form.mot_de_passe) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.photo) }}
+            {{ form_widget(form.photo) }}
+        </div>
+
+        <button class="btn btn-primary" type="submit">Create User</button>
+
+    {{ form_end(form) }}
+{% endblock %}
