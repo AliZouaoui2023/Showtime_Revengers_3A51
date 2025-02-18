@@ -12,6 +12,7 @@ class Demande
     const TYPE_FOOTER_WEB = 'footerWeb';
     const TYPE_INTEGREFILM = 'integrefilm';
     const TYPE_BACKDROP = 'backdrop';
+    
 
     const STATUT_EN_ATTENTE = 'en_attente';
     const STATUT_APPROUVEE = 'approuvee';
