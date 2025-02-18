@@ -1,0 +1,187 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Demande{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="h4 mb-0 text-center">Demande Details</h1>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th width="30%">Id</th>
+                                        <td>{{ demande.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>NbrJours</th>
+                                        <td>{{ demande.nbrJours }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Description</th>
+                                        <td>{{ demande.description }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Type</th>
+                                        <td>{{ demande.type }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>LienSupp</th>
+                                        <td>{{ demande.lienSupp }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <td>{{ demande.statut }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>DateSoumission</th>
+                                        <td>{{ demande.dateSoumission ? demande.dateSoumission|date('Y-m-d H:i:s') : '' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="{{ path('app_demande_index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <a href="{{ path('app_demande_edit', {'id': demande.id}) }}" class="btn btn-warning mx-2">
+                                <i class="fas fa-edit me-2"></i>Edit
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-center">
+                        <div class="delete-form-container">
+                            {{ include('demande/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+            background-color: #ffffff;
+        }
+
+        .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            background-color: #007bff;
+            padding: 1rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            background-color: #ffffff;
+        }
+
+        .table-responsive {
+            margin: -1px;  /* Fix border alignment */
+        }
+
+        .table {
+            margin-bottom: 0;
+            background-color: #ffffff;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            width: 30%;
+            vertical-align: middle;
+            padding: 0.75rem;
+        }
+
+        .table td {
+            padding: 0.75rem;
+            word-break: break-word;
+        }
+
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-outline-secondary {
+            color: #ffffff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .btn-warning {
+            color: #212529;
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+        .card-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid rgba(0, 0, 0, 0.125);
+            padding: 1rem;
+        }
+
+        /* Styles pour le bouton de suppression */
+        .delete-form-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .delete-form-container form button {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+        .delete-form-container form button:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        @media (max-width: 768px) {
+            .col-md-8 {
+                padding: 0 15px;
+            }
+            
+            .card {
+                border-radius: 0;
+            }
+            
+            .table th {
+                width: 40%;
+            }
+        }
+    </style>
+{% endblock %}

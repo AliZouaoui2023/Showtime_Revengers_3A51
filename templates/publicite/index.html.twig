@@ -1,0 +1,113 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Publicité Index{% endblock %}
+
+{% block body %}
+    <div class="container-fluid px-4">
+        <div class="card shadow mb-4">
+            <br></br><br></br>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0 text-primary">Liste des Publicités</h4>
+                <a href="{{ path('app_publicite_new') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Créer une nouvelle publicité
+                </a>
+            </div>
+
+            <div class="card-body">
+                <p class="card-description mb-4">Liste des publicités dans le système.</p>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center" style="width: 5%; background-color: #4e73df; color: white;">Id</th>
+                                <th style="width: 12%; background-color: #4e73df; color: white;">Support</th>
+                                <th style="width: 12%; background-color: #4e73df; color: white;">Date Début</th>
+                                <th style="width: 12%; background-color: #4e73df; color: white;">Date Fin</th>
+                                <th style="width: 15%; background-color: #4e73df; color: white;">Montant</th>
+                                <th style="width: 10%; background-color: #4e73df; color: white;">Demandes Validées</th>
+                                <th class="text-center" style="width: 15%; background-color: #4e73df; color: white;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for publicite in publicites %}
+                            <tr>
+                                <td class="text-center">{{ publicite.id }}</td>
+                                <td>{{ publicite.support }}</td>
+                                <td>{{ publicite.dateDebut ? publicite.dateDebut|date('Y-m-d') : 'N/A' }}</td>
+                                <td>{{ publicite.dateFin ? publicite.dateFin|date('Y-m-d') : 'N/A' }}</td>
+                                <td>{{ publicite.montant }}</td>
+                                <td>
+                                    {% if publicite.demande %}
+                                        <span class="badge bg-success">Demande #{{ publicite.demande.id }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Aucune demande</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column align-items-center gap-2">
+                                        <a href="{{ path('app_publicite_show', {'id': publicite.id}) }}" 
+                                           class="btn btn-info btn-sm mb-2 w-100" 
+                                           title="Voir les détails">
+                                            Voir les détails
+                                        </a>
+                                        <a href="{{ path('app_publicite_edit', {'id': publicite.id}) }}" 
+                                           class="btn btn-warning btn-sm mb-2 w-100"
+                                           title="Modifier">
+                                            Modifier
+                                        </a>
+
+                                        <!-- Formulaire de suppression -->
+                                        <form action="{{ path('app_publicite_delete', {'id': publicite.id}) }}" 
+                                              method="post" 
+                                              class="d-inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ publicite.id) }}">
+                                            <button type="submit" 
+                                                    class="btn btn-danger w-100" 
+                                                    title="Supprimer"
+                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette publicité ?')">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="alert alert-info mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>Aucune publicité trouvée
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .table td, .table th {
+            color: white !important;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table tbody td:hover, .table tbody tr:hover {
+            color: white !important;
+            background-color: #f1f1f1 !important;
+        }
+
+        /* Ajustement des bordures */
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #ddd !important;
+        }
+    </style>
+{% endblock %}

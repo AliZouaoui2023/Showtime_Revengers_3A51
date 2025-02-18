@@ -1,0 +1,199 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Publicite{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white rounded-top">
+                        <h1 class="h4 mb-0 text-center">Publicite Details</h1>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="mb-4 text-center">Details of the advertisement</h5>
+                        <div class="table-responsive">
+                            <table class="table table-form">
+                                <tbody>
+                                    <tr>
+                                        <th>Id</th>
+                                        <td>{{ publicite.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>DateDebut</th>
+                                        <td>{{ publicite.dateDebut ? publicite.dateDebut|date('Y-m-d') : '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>DateFin</th>
+                                        <td>{{ publicite.dateFin ? publicite.dateFin|date('Y-m-d') : '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Support</th>
+                                        <td>{{ publicite.support }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Montant</th>
+                                        <td>{{ publicite.montant }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-center rounded-bottom bg-warning">
+                        <a href="{{ path('app_publicite_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                        <a href="{{ path('app_publicite_edit', {'id': publicite.id}) }}" class="btn btn-success ms-3">
+                            <i class="fas fa-edit me-2"></i>Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        {{ include('publicite/_delete_form.html.twig') }}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: none;
+        }
+
+        .card-header {
+            background: #007bff;
+            border-bottom: 2px solid #0056b3;
+            padding: 1.25rem 2rem;
+        }
+
+        .card-header h1 {
+            color: white;
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+
+        .card-body h5 {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-form {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+
+        .table-form th {
+            width: 30%;
+            padding: 1.25rem;
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .table-form td {
+            padding: 1.25rem;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+
+        .table-form tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid #6c757d;
+            color: #6c757d;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            border-color: #1e7e34;
+        }
+
+        .card-footer.bg-warning {
+            background: #ffc107;
+            border-top: 2px solid #e0a800;
+            padding: 1.25rem;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            border-color: #dc3545;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 767px) {
+            .card-header, 
+            .card-body, 
+            .card-footer {
+                padding: 1.25rem;
+            }
+            
+            .table-form th,
+            .table-form td {
+                padding: 1rem;
+                display: block;
+                width: 100%;
+                text-align: left;
+            }
+            
+            .table-form th {
+                background-color: #fff;
+                border-bottom: none;
+                padding-bottom: 0.5rem;
+            }
+            
+            .table-form td {
+                padding-top: 0.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid #dee2e6;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            
+            .card-footer .btn {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+{% endblock %}
