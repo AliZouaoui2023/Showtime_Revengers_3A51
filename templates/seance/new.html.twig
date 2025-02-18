@@ -1,0 +1,50 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Nouvelle Séance{% endblock %}
+
+{% block body %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                      
+
+                        {{ form_start(form) }}
+
+                        <div class="form-group">
+                            {{ form_label(form.dateSeance) }}
+                            {{ form_widget(form.dateSeance, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.dateSeance) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.duree) }}
+                            {{ form_widget(form.duree, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.duree) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.objectifs) }}
+                            {{ form_widget(form.objectifs, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.objectifs) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.cour) }}
+                            {{ form_widget(form.cour, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.cour) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                        <a href="{{ path('app_seance_index') }}" class="btn btn-light">Annuler</a>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

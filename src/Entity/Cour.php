@@ -1,0 +1,200 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\CourRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\User; // Import de la classe User
+
+#[ORM\Entity(repositoryClass: CourRepository::class)]
+class Cour
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $typeCour = null;
+
+    #[ORM\Column]
+    private ?float $cout = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateDebut = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateFin = null;
+    
+
+    /**
+     * @var Collection<int, Evenement>
+     */
+    #[ORM\OneToMany(targetEntity: Evenement::class, mappedBy: 'cour' , cascade: ['remove'])]
+    private Collection $evenements;
+
+    /**
+     * @var Collection<int, Seance>
+     */
+    #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'cour')]
+    private Collection $seances;
+
+    /**
+     * Relation ManyToMany vers l'entité User.
+     * La relation est mappée par la propriété "cours" de l'entité User.
+     *
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'cours')]
+    private Collection $users;
+
+    public function __construct()
+    {
+        $this->evenements = new ArrayCollection();
+        $this->seances = new ArrayCollection();
+        $this->users = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTypeCour(): ?string
+    {
+        return $this->typeCour;
+    }
+
+    public function setTypeCour(string $typeCour): static
+    {
+        $this->typeCour = $typeCour;
+
+        return $this;
+    }
+
+    public function getCout(): ?float
+    {
+        return $this->cout;
+    }
+
+    public function setCout(float $cout): static
+    {
+        $this->cout = $cout;
+
+        return $this;
+    }
+
+    public function getDateDebut(): ?\DateTimeInterface
+    {
+        return $this->dateDebut;
+    }
+
+    public function setDateDebut(\DateTimeInterface $dateDebut): static
+    {
+        $this->dateDebut = $dateDebut;
+
+        return $this;
+    }
+
+    public function getDateFin(): ?\DateTimeInterface
+    {
+        return $this->dateFin;
+    }
+
+    public function setDateFin(\DateTimeInterface $dateFin): static
+    {
+        $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Seance>
+     */
+    public function getSeances(): Collection
+    {
+        return $this->seances;
+    }
+
+    public function addSeance(Seance $seance): static
+    {
+        if (!$this->seances->contains($seance)) {
+            $this->seances->add($seance);
+            $seance->setCour($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeance(Seance $seance): static
+    {
+        if ($this->seances->removeElement($seance)) {
+            // Réinitialiser la propriété propriétaire si nécessaire
+            if ($seance->getCour() === $this) {
+                $seance->setCour(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evenement>
+     */
+    public function getEvenements(): Collection
+    {
+        return $this->evenements;
+    }
+
+    public function addEvenement(Evenement $evenement): static
+    {
+        if (!$this->evenements->contains($evenement)) {
+            $this->evenements->add($evenement);
+            $evenement->setCour($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvenement(Evenement $evenement): static
+    {
+        if ($this->evenements->removeElement($evenement)) {
+            // Réinitialiser la propriété propriétaire si nécessaire
+            if ($evenement->getCour() === $this) {
+                $evenement->setCour(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addCour($this); // Met à jour la relation réciproque
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeCour($this);
+        }
+
+        return $this;
+    }
+}

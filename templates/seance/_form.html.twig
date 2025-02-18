@@ -1,0 +1,90 @@
+{{ form_start(form) }}
+
+<div class="form-group">
+    {{ form_label(form.dateSeance) }}
+    {{ form_widget(form.dateSeance, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.dateSeance) }} {# Afficher les erreurs de validation #}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.duree, 'Durée') }}
+    <div class="d-flex">
+        <div class="mr-2 position-relative" style="flex: 1;">
+            <input type="number" id="duree_hours" name="duree_hours" class="form-control" min="0" max="23"
+                   value="{% if form.duree.vars.value is not null and form.duree.vars.value is not empty %}{{ (form.duree.vars.value // 60) }}{% else %}0{% endif %}"
+                   onchange="updateDuree()">
+            <span class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                <span style="color: #6c757d; font-weight: 500;">h</span>
+            </span>
+        </div>
+        <div class="mr-2 position-relative" style="flex: 1;">
+            <input type="number" id="duree_minutes" name="duree_minutes" class="form-control" min="0" max="59"
+                   value="{% if form.duree.vars.value is not null and form.duree.vars.value is not empty %}{{ form.duree.vars.value % 60 }}{% else %}0{% endif %}"
+                   onchange="updateDuree()">
+            <span class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                <span style="color: #6c757d; font-weight: 500;">m</span>
+            </span>
+        </div>
+        <div class="position-relative" style="flex: 1;">
+            <input type="number" id="duree_seconds" name="duree_seconds" class="form-control" min="0" max="59" value="0"
+                   onchange="updateDuree()">
+            <span class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+                <span style="color: #6c757d; font-weight: 500;">sc</span>
+            </span>
+        </div>
+    </div>
+    {{ form_widget(form.duree, {'attr': {'class': 'd-none', 'id': 'duree_total'}}) }}
+    {{ form_errors(form.duree) }} {# Afficher les erreurs de validation #}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.objectifs) }}
+    <div class="card">
+        <div class="card-body p-0">
+            {{ form_widget(form.objectifs, {
+                'attr': {
+                    'class': 'form-control border-0',
+                    'rows': '5',
+                    'style': 'min-height: 120px; resize: vertical;',
+                    'placeholder': 'Définissez les objectifs de cette séance...',
+                    'id': 'objectifs-textarea'
+                }
+            }) }}
+            {{ form_errors(form.objectifs) }} {# Afficher les erreurs de validation #}
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    {{ form_label(form.cour) }}
+    {{ form_widget(form.cour, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.cour) }} {# Afficher les erreurs de validation #}
+</div>
+
+ {{ include('seance/_form.html.twig', {'button_label': 'Ajouter'}) }}
+                      
+                    <a href="{{ path('app_seance_index') }}" class="btn btn-light">Annuler</a>
+
+{{ form_end(form) }}
+
+<script>
+function updateDuree() {
+    const hours = parseInt(document.getElementById('duree_hours').value) || 0;
+    const minutes = parseInt(document.getElementById('duree_minutes').value) || 0;
+    const seconds = parseInt(document.getElementById('duree_seconds').value) || 0;
+
+    // Convertir tout en minutes et stocker dans le champ caché
+    const totalMinutes = (hours * 60) + minutes + (seconds / 60);
+    document.getElementById('duree_total').value = Math.round(totalMinutes);
+
+    // Vérifiez les valeurs de debug dans la console du navigateur
+    console.log('Heures:', hours, 'Minutes:', minutes, 'Secondes:', seconds);
+    console.log('Durée totale:', totalMinutes);
+}
+
+// Initialiser les champs lorsque la page se charge
+document.addEventListener('DOMContentLoaded', function() {
+    updateDuree();
+});
+
+</script>

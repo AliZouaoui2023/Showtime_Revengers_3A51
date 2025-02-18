@@ -26,12 +26,14 @@
   </head>
 
   <body>
+
     <style>
         /* Change background color to dark blue */
         body {
           background-color: #081c30;  /* Dark blue background */
           color: white;  /* White text color */
         }
+       
     </style>
 
     <div class="container-scroller">
@@ -154,11 +156,11 @@
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="pages/icons/font-awesome.html">
+            <a class="nav-link" href="{{ path('app_cour_index') }}">
               <span class="menu-icon">
                 <i class="mdi mdi-contacts"></i>
               </span>
-              <span class="menu-title">Cours</span>
+              <span class="menu-title" >Cours</span>
               <i class="menu-arrow"></i>
             </a>
           </li>
@@ -386,6 +388,7 @@ w                     <div class="preview-item-content">
           </div>
         </nav>
         <!-- partial -->
+        {% block body %}
         <div class="main-panel">
         
             
@@ -394,12 +397,14 @@ w                     <div class="preview-item-content">
          
           <!-- partial -->
         </div>
+        {% endblock %}
         <!-- main-panel ends -->
       
       </div>
       
       <!-- page-body-wrapper ends -->
     </div>
+   
   
     <!-- container-scroller -->
     <script src="../../Back/assets/vendors/js/vendor.bundle.base.js"></script>
@@ -420,7 +425,9 @@ w                     <div class="preview-item-content">
     <script src="../../Back/js/proBanner.js"></script>
     <script src="../../Back/js/dashboard.js"></script>
     <!-- End custom js for this page -->
+   
   </body>
+   
    <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>

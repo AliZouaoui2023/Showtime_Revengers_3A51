@@ -1,0 +1,24 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Nouveau Cours{% endblock %}
+
+{% block body %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                
+                    <div class="card-body">
+                    
+                
+
+                        {{ include('cour/_form.html.twig', {'button_label': 'Ajouter'}) }} 
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

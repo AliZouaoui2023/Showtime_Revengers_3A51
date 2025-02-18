@@ -1,0 +1,109 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}<title>Liste des Séances</title>{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Styles personnalisés pour la table */
+        .table-custom {
+            font-size: 14px;
+            width: 50%; /* Largeur définie */
+            table-layout: fixed; /* Contrôle des largeurs */
+            border-collapse: separate;
+            border-spacing: 0 10px; /* Espacement vertical entre les lignes */
+        }
+        
+        .table-custom th,
+        .table-custom td {
+            padding: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle; /* Alignement vertical */
+        }
+
+        /* Colonne Actions */
+        .actions-column {
+            width: 120px !important;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        /* Boutons d'action */
+        .action-buttons {
+            display: flex;
+            gap: 2px; /* Espace entre les boutons */
+            justify-content: center;
+        }
+
+        .table-custom .badge {
+            font-size: 10px;
+            padding: 2px 4px;
+            min-width: 45px;
+        }
+
+        /* Ajustements responsive */
+        .table-responsive {
+            margin-top: 5px;
+            overflow-x: auto;
+        }
+        
+        .card {
+            margin-top: 5px; /* Augmente l'espacement au-dessus de la carte */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div style="display: flex; align-items: center; justify-content: center; margin-left:20px; margin-top:-100px;">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <h2 style="display: flex; align-items: center; justify-content: center;">Liste des Séances</h2>
+                <a href="{{ path('app_seance_new') }}" class="btn btn-primary mt-3 mb-2">Créer une nouvelle séance</a>
+                <table class="table table-bordered table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Id</th>
+                            <th style="width: 120px;">Date de Séance</th>
+                            <th style="width: 80px;">Durée</th>
+                            <th style="width: 150px;">Objectifs</th>
+                            <th style="width: 100px;">Cours</th>
+                            <th class="actions-column">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for seance in seances %}
+                            <tr class="table-info">
+                                <td>{{ seance.id }}</td>
+                                <td>{{ seance.dateSeance ? seance.dateSeance|date('Y-m-d') : '' }}</td>
+                                <td>{{ seance.duree }}</td>
+                                <td>{{ seance.objectifs }}</td>
+                                <td>{{ seance.cour ? seance.cour.typeCour : 'Non défini' }}</td>
+                                <td class="actions-column">
+                                    <div class="action-buttons">
+                                        <a href="{{ path('app_seance_show', {'id': seance.id}) }}" class="btn btn-sm btn-info">
+                                            <i class="mdi mdi-eye"></i> Voir
+                                        </a>
+                                        <a href="{{ path('app_seance_edit', {'id': seance.id}) }}" class="btn btn-sm btn-warning">
+                                            <i class="mdi mdi-pencil"></i> Modifier
+                                        </a>
+                                        <form method="POST" action="{{ path('app_seance_delete', {'id': seance.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette séance ?');" class="d-inline">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ seance.id) }}">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="mdi mdi-delete"></i> Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

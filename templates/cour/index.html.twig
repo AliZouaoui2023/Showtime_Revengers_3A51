@@ -1,0 +1,118 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}<title>Cour index</title>{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Styles personnalisés pour la table */
+        .table-custom {
+            font-size: 14px;
+            width: 50%; /* Tableau en pleine largeur */
+            table-layout: fixed; /* Contrôle des largeurs */
+        }
+        
+        .table-custom th,
+        .table-custom td {
+            padding: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle; /* Alignement vertical */
+        }
+
+        /* Colonne Actions */
+        .actions-column {
+            width: 120px !important; /* Largeur fixe */
+            min-width: 120px;
+            text-align: center;
+        }
+
+        /* Boutons d'action */
+        .action-buttons {
+            display: flex;
+            gap: 2px; /* Espace entre les boutons */
+            justify-content: center;
+        }
+
+        .table-custom .badge {
+            font-size: 10px;
+            padding: 2px 4px;
+            min-width: 45px; /* Largeur minimale des boutons */
+        }
+
+        /* Ajustements responsive */
+        .table-responsive {
+            margin-top: 5px;
+            overflow-x: auto; /* Défilement horizontal si nécessaire */
+        }
+        
+        .card {
+            margin-top: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div style="display: flex;align-items: center;justify-content: center;margin-left:40px;margin-top:60px;">
+    <div class="card">
+        <div class="card-body">
+        
+            <div class="table-responsive">
+               <h2 style="display: flex;align-items: center;justify-content: center;">Liste des Cours</h2> <a href="{{ path('app_cour_new') }}" class="btn btn-primary mt-3 mb-2">Créer un nouveau cours</a>
+                <table class="table table-bordered table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Id</th>
+                            <th style="width: 100px;">TypeCour</th>
+                            <th style="width: 80px;">Cout</th>
+                            <th style="width: 120px;">DateDebut</th>
+                            <th style="width: 120px;">DateFin</th>
+                            <th class="actions-column">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for cour in cours %}
+                        <tr class="table-info">
+                            <td>{{ cour.id }}</td>
+                            <td>{{ cour.typeCour }}</td>
+                            <td>{{ cour.cout }}</td>
+                            <td>{{ cour.dateDebut ? cour.dateDebut|date('Y-m-d') : '' }}</td>
+                            <td>{{ cour.dateFin ? cour.dateFin|date('Y-m-d') : '' }}</td>
+                            <td class="actions-column">
+                                <div class="action-buttons">
+                                   {# Bouton Show #}
+<a href="{{ path('app_cour_show', {'id': cour.id}) }}" class="btn btn-sm btn-info">
+    <i class="mdi mdi-eye"></i> Show
+</a>
+
+{# Bouton Edit #}
+<a href="{{ path('app_cour_edit', {'id': cour.id}) }}" class="btn btn-sm btn-warning">
+    <i class="mdi mdi-pencil"></i> Edit
+</a>
+
+{# Bouton Supprimer (existant) #}
+<form method="POST" 
+      action="{{ path('app_cour_delete', {'id': cour.id}) }}" 
+      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?');"
+      class="d-inline">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cour.id) }}">
+    <button type="submit" class="btn btn-sm btn-danger">
+        <i class="mdi mdi-delete"></i> Supprimer
+    </button>
+</form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr class="table-danger">
+                            <td colspan="6">Aucun cours trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
