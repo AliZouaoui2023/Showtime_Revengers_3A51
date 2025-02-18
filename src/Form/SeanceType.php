@@ -4,10 +4,12 @@ namespace App\Form;
 
 use App\Entity\Cour;
 use App\Entity\Seance;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Assurez-vous que c'est bien ce namespace
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
 
 class SeanceType extends AbstractType
 {
@@ -18,11 +20,20 @@ class SeanceType extends AbstractType
                 'widget' => 'single_text'
             ])
             ->add('duree')
-            ->add('objectifs')
+            ->add('objectifs', TextareaType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 4,
+                    'style' => 'min-height: 150px; resize: vertical;',
+                    'placeholder' => 'Définissez les objectifs de cette séance...',
+                    'id' => 'objectifs-textarea'
+                ]
+            ])
             ->add('cour', EntityType::class, [
                 'class' => Cour::class,
-                'choice_label' => 'id', // Vous pouvez le changer pour un autre attribut comme 'typeCour'
-            ]);
+                'choice_label' => 'id',
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

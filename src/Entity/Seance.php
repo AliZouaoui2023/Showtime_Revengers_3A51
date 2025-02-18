@@ -17,8 +17,9 @@ class Seance
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateSeance = null;
 
-    #[ORM\Column]
-    private ?int $duree = null;
+    
+  #[ORM\Column(type:"integer")]
+private $duree;
 
     #[ORM\Column(length: 255)]
     private ?string $objectifs = null;

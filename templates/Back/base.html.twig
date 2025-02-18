@@ -156,14 +156,59 @@
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="{{ path('app_cour_index') }}">
-              <span class="menu-icon">
-                <i class="mdi mdi-contacts"></i>
-              </span>
-              <span class="menu-title" >Cours</span>
-              <i class="menu-arrow"></i>
-            </a>
-          </li>
+ 
+    <a class="nav-link" data-toggle="collapse" href="#demandePublicite" aria-expanded="false" aria-controls="demandePublicite" onclick="toggleSubMenu(this)">
+        <span class="menu-icon">
+            <i class="mdi mdi-chart-bar"></i>
+        </span>
+        <span class="menu-title">Cours</span>
+        <i class="menu-arrow">▶</i>
+    </a>
+    <div class="collapse" id="demandePublicite">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_cour_index') }}">Cour🎬</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_seance_index') }}">Seance🎭</a>
+            </li>
+        </ul>
+   
+    </div>
+
+    <!-- CSS pour gérer l'affichage du sous-menu -->
+    <style>
+        .nav-item {
+            list-style-type: none;
+        }
+
+        .menu-arrow {
+            float: right;
+            transition: transform 0.3s ease;
+        }
+
+        .arrow-rotated .menu-arrow {
+            transform: rotate(90deg);
+        }
+    </style>
+
+    <!-- JavaScript pour gérer l'affichage du sous-menu -->
+    <script>
+        function toggleSubMenu(link) {
+            var subMenu = link.nextElementSibling; // Cibler le sous-menu suivant (la div avec id "demandePublicite")
+            var arrow = link.querySelector(".menu-arrow");
+
+            // Vérifier si le sous-menu est actuellement caché ou visible
+            if (subMenu.style.display === "none" || subMenu.style.display === "") {
+                subMenu.style.display = "block"; // Afficher le sous-menu
+                arrow.classList.add("arrow-rotated"); // Tourner la flèche
+            } else {
+                subMenu.style.display = "none"; // Masquer le sous-menu
+                arrow.classList.remove("arrow-rotated"); // Réinitialiser la flèche
+            }
+        }
+    </script>
+</li>
           <li class="nav-item menu-items">
             <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
               <span class="menu-icon">

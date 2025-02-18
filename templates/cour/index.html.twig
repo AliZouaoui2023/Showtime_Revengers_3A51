@@ -25,6 +25,7 @@
             width: 120px !important; /* Largeur fixe */
             min-width: 120px;
             text-align: center;
+          
         }
 
         /* Boutons d'action */
@@ -58,7 +59,7 @@
         <div class="card-body">
         
             <div class="table-responsive">
-               <h2 style="display: flex;align-items: center;justify-content: center;">Liste des Cours</h2> <a href="{{ path('app_cour_new') }}" class="btn btn-primary mt-3 mb-2">Créer un nouveau cours</a>
+               <h2 style="display: flex;align-items: center;justify-content: center;">🎥 Liste des Cours 🎭</h2> <a href="{{ path('app_cour_new') }}" class="btn btn-primary mt-3 mb-2">➕ Créer un nouveau cours</a>
                 <table class="table table-bordered table-custom">
                     <thead>
                         <tr>
@@ -67,7 +68,7 @@
                             <th style="width: 80px;">Cout</th>
                             <th style="width: 120px;">DateDebut</th>
                             <th style="width: 120px;">DateFin</th>
-                            <th class="actions-column">Actions</th>
+                            <th style=" display: flex;align-items: center;justify-content: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,12 +83,12 @@
                                 <div class="action-buttons">
                                    {# Bouton Show #}
 <a href="{{ path('app_cour_show', {'id': cour.id}) }}" class="btn btn-sm btn-info">
-    <i class="mdi mdi-eye"></i> Show
+    <i class="mdi mdi-eye"></i> VOIR
 </a>
 
 {# Bouton Edit #}
 <a href="{{ path('app_cour_edit', {'id': cour.id}) }}" class="btn btn-sm btn-warning">
-    <i class="mdi mdi-pencil"></i> Edit
+    <i class="mdi mdi-pencil"></i> MODIFIER
 </a>
 
 {# Bouton Supprimer (existant) #}
@@ -98,7 +99,7 @@
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cour.id) }}">
     <button type="submit" class="btn btn-sm btn-danger">
-        <i class="mdi mdi-delete"></i> Supprimer
+        <i class="mdi mdi-delete"></i> SUPPRIMER
     </button>
 </form>
                                 </div>

@@ -1,13 +1,21 @@
-<!DOCTYPE html>
+{% extends 'Back/base.html.twig' %} {# Étendre directement le template de base #}
 
-<title>Edit Seance</title>
+{% block title %}Modifier Seance{% endblock %}
 
 {% block body %}
-    <h1>Edit Seance</h1>
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('seance/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-    {{ include('seance/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_seance_index') }}">back to list</a>
-
-    {{ include('seance/_delete_form.html.twig') }}
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
