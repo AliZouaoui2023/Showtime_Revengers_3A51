@@ -1,0 +1,39 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block body %}
+    <h1>Films index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom_Film</th>
+                <th>Date_Production</th>
+                <th>Realisateur</th>
+                <th>Genre</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for film in films %}
+            <tr>
+                <td>{{ film.id }}</td>
+                <td>{{ film.NomFilm }}</td>
+                <td>{{ film.DateProduction ? film.DateProduction|date('Y-m-d') : '' }}</td>
+                <td>{{ film.Realisateur }}</td>
+                <td>{{ film.Genre }}</td>
+                <td>
+                    <a href="{{ path('app_films_show', {'id': film.id}) }}">show</a>
+                    <a href="{{ path('app_films_edit', {'id': film.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_films_new') }}">Create new</a>
+{% endblock %}

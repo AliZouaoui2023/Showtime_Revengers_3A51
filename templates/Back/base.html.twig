@@ -163,13 +163,14 @@
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+            <a class="nav-link" data-bs-toggle="collapse" href="/films" aria-expanded="false" aria-controls="auth">
               <span class="menu-icon">
                 <i class="mdi mdi-security"></i>
               </span>
               <span class="menu-title">Films et Projections</span>
               <i class="menu-arrow"></i>
             </a>
+            
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
@@ -181,11 +182,11 @@
             </div>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="docs/documentation.html">
+            <a class="nav-link" href="/projection">
               <span class="menu-icon">
                 <i class="mdi mdi-file-document"></i>
               </span>
-              <span class="menu-title">Documentation</span>
+              <span class="menu-title">Projections</span>
             </a>
           </li>
         </ul>
@@ -391,7 +392,12 @@ w                     <div class="preview-item-content">
             
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
-         
+        
+{% block body %}
+   
+{% endblock %}
+
+
           <!-- partial -->
         </div>
         <!-- main-panel ends -->
