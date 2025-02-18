@@ -24,7 +24,13 @@ final class DemandeController extends AbstractController
             'demandes' => $demandeRepository->findAll(),
         ]);
     }
-    
+    #[Route(name: 'app_demande_indexx', methods: ['GET'])]
+    public function indexx(DemandeRepository $demandeRepository): Response
+    {
+        return $this->render('demande/indexdemande.html.twig', [
+            'demandes' => $demandeRepository->findAll(),
+        ]);
+    }
     
 
     #[Route('/new', name: 'app_demande_new', methods: ['GET', 'POST'])]
