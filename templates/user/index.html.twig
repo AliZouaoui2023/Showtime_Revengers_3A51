@@ -27,7 +27,13 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.role }}</td>
                 <td>{{ user.motDePasse }}</td>
-                <td>{{ user.photo }}</td>
+                <td>
+                    {% if user.photo %}
+                        <img src="{{ asset('Back/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto;">
+                    {% else %}
+                        <span>No photo</span>
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
                     <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>

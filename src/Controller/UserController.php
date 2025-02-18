@@ -10,6 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Validator\Constraints\Image;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -31,6 +34,29 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle the uploaded photo
+            /** @var UploadedFile $photoFile */
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                // Generate a unique filename for the uploaded image
+                $newFilename = uniqid() . '.' . $photoFile->guessExtension();
+                
+                try {
+                    // Move the file to the directory where user photos are stored
+                    $photoFile->move(
+                        $this->getParameter('uploads_directory'), // Ensure this parameter is set in services.yaml
+                        $newFilename
+                    );
+                    
+                    // Set the filename in the user entity
+                    $user->setPhoto($newFilename);
+                } catch (\Exception $e) {
+                    // Handle the error if file upload fails
+                    $form->get('photo')->addError(new FormError('An error occurred while uploading the photo.'));
+                }
+            }
+
+            // Persist the user data
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -39,7 +65,7 @@ final class UserController extends AbstractController
 
         return $this->render('user/new.html.twig', [
             'user' => $user,
-            'button_label' => 'Update', // Pass the button label
+            'button_label' => 'Create', // Button label for creating a user
             'form' => $form,
         ]);
     }
@@ -59,6 +85,30 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle the uploaded photo if there's a new one
+            /** @var UploadedFile $photoFile */
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                // Generate a unique filename for the uploaded image
+                $newFilename = uniqid() . '.' . $photoFile->guessExtension();
+
+                try {
+                    // Move the file to the directory where user photos are stored
+                    $photoFile->move(
+                        $this->getParameter('uploads_directory'), // Ensure this parameter is set in services.yaml
+                        $newFilename
+                    );
+                    
+                    // Set the filename in the user entity
+                    $user->setPhoto($newFilename);
+                } catch (\Exception $e) {
+                    // Handle the error if file upload fails
+                    $form->get('photo')->addError(new FormError('An error occurred while uploading the photo.'));
+                }
+            }
+
+            // If no new photo, keep the existing photo
+            // Persist the changes
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
@@ -67,8 +117,7 @@ final class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
-        ]);
-    }
+        ]);}
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response

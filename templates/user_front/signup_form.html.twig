@@ -1,0 +1,170 @@
+<head>
+    <style>
+        /* Global background color for the page */
+        body {
+                background-image: url('/front/images/uploads/slider-bg.jpg'); /* Add background image */
+    background-size: cover; /* Ensure the image covers the entire viewport */
+    background-position: center center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    font-family: 'Arial', sans-serif; /* Different font */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+        }
+
+        /* Main container for the form */
+        #signup-content {
+            background-color: #003366; /* Dark blue background for the form */
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            color: white; /* White text */
+            display: flex;
+            flex-direction: column;
+            height: 80%; /* Form height */
+            justify-content: space-between;
+        }
+
+        /* Form title */
+        .login-content h3 {
+            color: #ffffff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Container for form fields */
+        .login-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        /* Styling each input field */
+        .row {
+            margin-bottom: 15px;
+        }
+
+        input {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #f4f4f4; /* Light background for inputs */
+        }
+
+        /* Styling the password field specifically */
+        input[type="password"] {
+            background-color: #f4f4f4;
+        }
+
+        /* Submit button at the bottom of the form */
+        button {
+            padding: 10px 20px;
+            background-color: #005bb5; /* Blue background for button */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%; /* Make button the width of the form */
+            margin-top: auto; /* Position the button at the bottom */
+        }
+
+        /* Hover effect for the button */
+        button:hover {
+            background-color:rgb(13, 14, 15); /* Darker blue when hovered */
+        }
+
+        /* Close button styling */
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-wrapper" id="signup-content">
+        <div class="login-content">
+            <a href="#" class="close">x</a>
+            <h3>Sign up</h3>
+            {{ form_start(form) }} <!-- Symfony form start -->
+
+            <div class="row">
+                {{ form_label(form.Nom) }}
+                {{ form_widget(form.Nom) }} <!-- Name field -->
+                <div class="error-message">
+                    {{ form_errors(form.Nom) }} <!-- Show errors for Nom -->
+                </div>
+            </div>
+
+            <div class="row">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email) }} <!-- Email field -->
+                <div class="error-message">
+                    {{ form_errors(form.email) }} <!-- Show errors for email -->
+                </div>
+            </div>
+
+            <div class="row">
+                {{ form_label(form.mot_de_passe) }}
+                {{ form_widget(form.mot_de_passe) }} <!-- Password field -->
+                <div class="error-message">
+                    {{ form_errors(form.mot_de_passe) }} <!-- Show errors for mot_de_passe -->
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="repassword-2">
+                    Re-type Password:
+                    <input type="password" name="repassword" id="repassword-2" placeholder="Re-type your password" required="required" />
+                </label>
+            </div>
+
+            <div class="row">
+                {{ form_label(form.date_de_naissance) }}
+                {{ form_widget(form.date_de_naissance) }} <!-- Date de naissance -->
+                <div class="error-message">
+                    {{ form_errors(form.date_de_naissance) }} <!-- Show errors for date_de_naissance -->
+                </div>
+            </div>
+
+            <div class="row">
+                {{ form_label(form.role) }} <!-- Label for role -->
+                {{ form_widget(form.role) }} <!-- Dropdown for role -->
+                <div class="error-message">
+                    {{ form_errors(form.role) }} <!-- Show errors for role -->
+                </div>
+            </div>
+
+            <div class="row">
+                {{ form_label(form.photo) }}
+                {{ form_widget(form.photo) }} <!-- Photo field -->
+                <div class="error-message">
+                    {{ form_errors(form.photo) }} <!-- Show errors for photo -->
+                </div>
+            </div>
+
+            <div class="row">
+                <button type="submit">Sign up</button> <!-- Submit button -->
+            </div>
+
+            {{ form_end(form) }} <!-- Symfony form end -->
+        </div>
+    </div>
+</body>
