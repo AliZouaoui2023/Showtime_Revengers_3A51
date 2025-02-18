@@ -6,6 +6,7 @@ use App\Entity\Films;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class FilmsType extends AbstractType
 {
@@ -17,7 +18,15 @@ class FilmsType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('Realisateur')
-            ->add('Genre')
+            ->add('Genre',ChoiceType::class,[
+                'choices'=>[
+                    'Horror'=>'Horror',
+                    'Comedy'=>'Comedy',
+                    'Romance'=>'Romance',
+                ],
+                'placeholder'=>'choisir un genre',
+                'required'=>true,
+            ])
         ;
     }
 

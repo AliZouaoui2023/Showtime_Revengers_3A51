@@ -1,11 +1,24 @@
 {% extends 'Back/base.html.twig' %}
 
+{% block title %}🎥 Modifier la Projection{% endblock %}
+
 {% block body %}
-    <h1>Edit Projection</h1>
+<div class="container mt-4">
+    <div class="card bg-dark text-light p-4 shadow-lg">
+        <h2 class="text-center mb-4">✏️ Modifier la Projection</h2>
 
-    {{ include('projection/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="px-3">
+            {{ include('projection/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
 
-    <a href="{{ path('app_projection_index') }}">back to list</a>
+        <div class="d-flex justify-content-between mt-3">
+            <a href="{{ path('app_projection_index') }}" class="btn btn-secondary">🔙 Retour</a>
 
-    {{ include('projection/_delete_form.html.twig') }}
+            <form method="post" action="{{ path('app_projection_delete', {'id': projection.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette projection ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ projection.id) }}">
+                <button type="submit" class="btn btn-danger">🗑️ Supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
