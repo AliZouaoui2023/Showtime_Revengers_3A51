@@ -1,0 +1,80 @@
+{%extends 'Back/base.html.twig'%}
+{% block title %}Modifier une salle{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center align-items-center height=30px min-vh-100"> {# Centrage vertical et horizontal #}
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                   <div class="card-body">
+   <h1 class="text-center mt-5 mb-4 fw-bold fs-3">Modifier la salle : {{ salle.nomSalle }}</h1>
+
+
+
+        {# Afficher les messages flash #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {# Formulaire de modification #}
+        {{ form_start(form) }}
+        
+            <div class="form-group">
+                {{ form_label(form.nom_salle, 'Nom de la salle', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(form.nom_salle, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom de la salle'} }) }}
+                {{ form_errors(form.nom_salle) }}
+            </div>
+
+            <div class="form-group mb-3">
+    <label class="form-label d-block text-white">Disponibilité</label>
+    <div class="btn-group w-100" role="group">
+        {% for choice in form.disponibilite %}
+            {{ form_widget(choice, { 'attr': {'class': 'btn-check', 'id': choice.vars.id} }) }}
+            {{ form_label(choice, choice.vars.label, { 'label_attr': {'class': 'btn btn-outline-light px-4', 'for': choice.vars.id} }) }}
+        {% endfor %}
+    </div>
+    {{ form_errors(form.disponibilite) }}
+</div>
+
+            <div class="form-group">
+                {{ form_label(form.type_salle, 'Type de salle', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(form.type_salle, { 'attr': {'class': 'form-control'} }) }}
+                {{ form_errors(form.type_salle) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.nombre_de_place, 'Nombre de places', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(form.nombre_de_place, { 'attr': {'class': 'form-control'} }) }}
+                {{ form_errors(form.nombre_de_place) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.statut, 'Statut de la salle', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(form.statut, { 'attr': {'class': 'form-control'} }) }}
+                {{ form_errors(form.statut) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.emplacement, 'Emplacement', { 'label_attr': {'class': 'form-label'} }) }}
+                {{ form_widget(form.emplacement, { 'attr': {'class': 'form-control'} }) }}
+                {{ form_errors(form.emplacement) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            <a href="{{ path('app_salle_index') }}" class="btn btn-secondary">Annuler</a>
+        {{ form_end(form) }}
+    </div>
+    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

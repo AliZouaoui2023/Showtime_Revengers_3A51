@@ -1,0 +1,125 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Statistiques des équipements et salles{% endblock %}
+
+{% block body %}
+    <div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+        <h2 class="text-center mb-4">Statistiques des équipements et des salles</h2>
+
+        <div class="row w-100 d-flex justify-content-center">
+            <!-- Graphique Doughnut - Répartition des équipements par état -->
+            <div class="col-md-5 grid-margin stretch-card d-flex justify-content-center mb-4">
+                <div class="card w-100">
+                    <div class="card-body text-center">
+                        <h4 class="card-title">Répartition des équipements selon leur état</h4>
+                        <div class="d-flex justify-content-center">
+                            <canvas id="doughnutChart" style="height:250px"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphique Pie - Répartition des équipements par état -->
+            <div class="col-md-5 grid-margin stretch-card d-flex justify-content-center mb-4">
+                <div class="card w-100">
+                    <div class="card-body text-center">
+                        <h4 class="card-title">Répartition des équipements (Vue Pie)</h4>
+                        <div class="d-flex justify-content-center">
+                            <canvas id="pieChart" style="height:250px"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row w-100 d-flex justify-content-center">
+            <!-- Graphique Pie - Disponibilité des salles -->
+            <div class="col-md-5 grid-margin stretch-card d-flex justify-content-center mt-5">
+                <div class="card w-100">
+                    <div class="card-body text-center">
+                        <h4 class="card-title">Disponibilité des salles (Vue Pie)</h4>
+                        <div class="d-flex justify-content-center">
+                            <canvas id="pieChartSalles" style="height:250px"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block javascript %}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Données des équipements
+                const equipementsData = {
+                    enService: {{ equipements_en_service|default(0) }},
+                    horsService: {{ equipements_hors_service|default(0) }},
+                    endommage: {{ equipements_endommage|default(0) }}
+                };
+
+                // Labels et données pour le graphique des équipements
+                const labelsEquipements = ["En service", "Hors service", "Endommagé"];
+                const dataEquipements = [equipementsData.enService, equipementsData.horsService, equipementsData.endommage];
+                const colorsEquipements = ["#d9788a", "#a6876d", "#727c84"];
+
+                // Configuration du graphique Doughnut des équipements
+                const chartConfigEquipements = {
+                    type: "doughnut",
+                    data: {
+                        labels: labelsEquipements,
+                        datasets: [{
+                            data: dataEquipements,
+                            backgroundColor: colorsEquipements
+                        }]
+                    }
+                };
+
+                // Création des graphiques
+                new Chart(document.getElementById("doughnutChart"), chartConfigEquipements);
+                new Chart(document.getElementById("pieChart"), { ...chartConfigEquipements, type: "pie" });
+
+                // Données des salles
+                const sallesData = {
+                    disponibles: {{ salles_disponibles|default(0) }},
+                    nonDisponibles: {{ salles_non_disponibles|default(0) }}
+                };
+
+                // Labels et données pour le graphique des salles
+                const labelsSalles = ["Disponibles", "Non disponibles"];
+                const dataSalles = [sallesData.disponibles, sallesData.nonDisponibles];
+                const colorsSalles = ["#28a745", "#dc3545"];
+
+                // Configuration du graphique Pie des salles
+                const chartConfigSalles = {
+                    type: "pie",
+                    data: {
+                        labels: labelsSalles,
+                        datasets: [{
+                            data: dataSalles,
+                            backgroundColor: colorsSalles
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return tooltipItem.label + ": " + tooltipItem.raw + " salles";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // Initialisation du graphique des salles
+                new Chart(document.getElementById("pieChartSalles"), chartConfigSalles);
+            });
+        </script>
+    {% endblock %}
+{% endblock %}
