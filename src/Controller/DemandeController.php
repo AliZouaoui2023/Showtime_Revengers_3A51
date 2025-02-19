@@ -1,6 +1,6 @@
 <?php
 
-// src/Controller/DemandeController.php
+
 
 namespace App\Controller;
 
@@ -24,13 +24,15 @@ final class DemandeController extends AbstractController
             'demandes' => $demandeRepository->findAll(),
         ]);
     }
-    #[Route(name: 'app_demande_indexx', methods: ['GET'])]
+    #[Route('/dd', name: 'app_demande_indexx', methods: ['GET'])]
     public function indexx(DemandeRepository $demandeRepository): Response
     {
         return $this->render('demande/indexdemande.html.twig', [
             'demandes' => $demandeRepository->findAll(),
         ]);
     }
+
+
     
 
     #[Route('/new', name: 'app_demande_new', methods: ['GET', 'POST'])]
@@ -124,6 +126,31 @@ final class DemandeController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/{id}/edittt', name: 'app_demande_edittt', methods: ['GET', 'POST'])]
+    public function edittt(Request $request, int $id, DemandeRepository $demandeRepository, EntityManagerInterface $entityManager): Response
+    {
+        $demande = $demandeRepository->find($id);
+    
+        if (!$demande) {
+            throw $this->createNotFoundException('Demande not found');
+        }
+    
+        $form = $this->createForm(DemandeType::class, $demande);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            return $this->redirectToRoute('app_demande_index', [], Response::HTTP_SEE_OTHER);
+        }
+    
+        return $this->render('demande/editdemande.html.twig', [
+            'demande' => $demande,
+            'form' => $form,
+        ]);
+    }
+    
+    
+
 
     #[Route('/{id}', name: 'app_demande_delete', methods: ['POST'])]
     public function delete(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
@@ -136,23 +163,20 @@ final class DemandeController extends AbstractController
         return $this->redirectToRoute('app_demande_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    /**
-     * Route pour valider la demande.
-     * Cette méthode met à jour le statut de la demande à "Validée" et redirige vers la page de création de publicité.
-     */
+
     #[Route('/demande/{id}/valider', name: 'app_demande_validate', methods: ['POST'])]
     public function validate(Request $request, Demande $demande, EntityManagerInterface $entityManager): Response
     {
-        // Vérifiez le token CSRF
+      
         if (!$this->isCsrfTokenValid('validate' . $demande->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Invalid CSRF token');
         }
 
-        // Changez le statut de la demande
+    
         $demande->setStatut('approuvee');
         $entityManager->flush();
 
-        // Rediriger vers la liste des demandes avec un message de succès
+  
         $this->addFlash('success', 'Demande validée avec succès');
         return $this->redirectToRoute('app_demande_index');
     }

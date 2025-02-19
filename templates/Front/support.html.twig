@@ -1,19 +1,61 @@
 <!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7 no-js" lang="en-US">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8 no-js" lang="en-US">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8)  ]><!-->
 <html lang="en" class="no-js">
 
-<head>
-    <title>Open Pediatrics</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- Google Font -->
-    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
-    
-    <!-- CSS files -->
-    <link rel="stylesheet" href="../../Front/css/plugins.css">
-    <link rel="stylesheet" href="../../Front/css/style.css">
 
-    <style>
+<head>
+	<!-- Basic need -->
+	<title>Open Pediatrics</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="author" content="">
+	<link rel="profile" href="#">
+
+    <!--Google Font-->
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
+	<!-- Mobile specific meta -->
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta name="format-detection" content="telephone-no">
+
+	<!-- CSS files -->
+	<link rel="stylesheet" href="../../Front/css/plugins.css">
+	<link rel="stylesheet" href="../../Front/css/style.css">
+
+</head>
+  <body>
+    <header class="ht-header">
+        <div class="container">
+            <nav class="navbar navbar-default navbar-custom">
+                <div class="navbar-header logo">
+                    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <div id="nav-icon1">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <a href="index.html">
+                        <img class="logo" src="../../Front/images/show.png" alt="Logo">
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav flex-child-menu menu-left">
+                        <li><a href="/demande/newdemande" class="btn btn-default">DEMANDE</a></li>
+                         <li><a href="{{ path('app_demande_indexx') }}" class="btn btn-default">VOTRE LISTE DES DEMANDES</a></li>
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+            <style>
         :root {
             --primary-color: #0088ff;
             --dark-bg: #020d18;
@@ -150,113 +192,24 @@
             transform: translateY(-1px);
         }
     </style>
-</head>
-
-<body>
-    <header class="ht-header">
-        <div class="container">
-            <nav class="navbar navbar-default navbar-custom">
-                <div class="navbar-header logo">
-                    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <div id="nav-icon1">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <a href="index.html">
-                        <img class="logo" src="../../Front/images/show.png" alt="Logo">
-                    </a>
-                </div>
-                <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav flex-child-menu menu-left">
-                        <li><a href="#" class="btn btn-default">DEMANDE</a></li>
-                         <li><a href="{{ path('app_demande_indexx') }}" class="btn btn-default">VOTRE LISTE DES DEMANDES</a></li>
-
-                    </ul>
-                </div>
-            </nav>
-        </div>
     </header>
-
-<div class="main-content">
-<br></br><br></br>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <h1>Edit Demande</h1>
-            </div>
-            <div class="card-body">
-                <div class="form-container">
-                    {{ form_start(form) }}
-                    
-                    <div class="form-group mb-3">
-                        <label class="form-label">Nbr jours</label>
-                        {{ form_widget(form.nbrJours, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label class="form-label">Description</label>
-                        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label class="form-label">Type</label>
-                        {{ form_widget(form.type, {
-                            'attr': {'class': 'form-select'},
-                            'choices': {
-                                'Sélectionner un type': '',
-                                'Footer Web': 'footerWeb',
-                                'Intégrer Film': 'integrefilm',
-                                'Backdrop': 'backdrop'
-                            },
-                            'required': true
-                        }) }}
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label class="form-label">Lien supp</label>
-                        {{ form_widget(form.lienSupp, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                    
-                    {# Champ statut caché avec valeur par défaut en_attente #}
-                    {{ form_widget(form.statut, {
-                        'attr': {'style': 'display: none'},
-                        'value': 'en_attente'
-                    }) }}
-                    
-                    {# Champs cachés avec valeurs par défaut #}
-                    {{ form_widget(form.dateSoumission, {
-                        'attr': {'style': 'display: none'},
-                        'value': "now"|date("Y-m-d H:i:s")
-                    }) }}
-
-                    {{ form_widget(form.user, {
-                        'attr': {'style': 'display: none'},
-                        'value': 3
-                    }) }}
-
-                    {{ form_widget(form.admin, {
-                        'attr': {'style': 'display: none'},
-                        'value': 1
-                    }) }}
-                    
-                    <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                    
-                    {{ form_end(form) }}
-                </div>
-            </div>
-        </div>
-    </div>
+  <div>
+  <br></br>  <br></br>  <br></br>  <br></br>  <br></br>
+{% block body %}
+{% endblock %}
 </div>
+  <div>
+  <br></br>  <br></br>  <br></br>  <br></br>  <br></br>
+{% block main %}
+{% endblock %}
+</div>
+        <!-- Scripts -->
+    <script src="../../Front/js/jquery.js"></script>
+    <script src="../../Front/js/plugins.js"></script>
+    <script src="../../Front/js/custom.js"></script>
 
-
-    <!-- Votre footer original -->
+        <!-- Votre footer original -->
     <footer class="ht-footer">
-    
         <div class="container">
             <div class="flex-parent-ft">
                 <div class="flex-child-ft item1">
@@ -309,10 +262,5 @@
             </div>
         </div>
     </footer>
-
-    <!-- Scripts -->
-    <script src="../../Front/js/jquery.js"></script>
-    <script src="../../Front/js/plugins.js"></script>
-    <script src="../../Front/js/custom.js"></script>
 </body>
 </html>

@@ -1,60 +1,37 @@
-{% extends 'Front/mabasedemande.html.twig' %}
+{% extends 'Front/support.html.twig' %}
 
 {% block title %}Liste des Demandes{% endblock %}
 
 {% block body %}
 
 <div class="container-fluid px-4">
-    <div class="card shadow mb-4">
-    <br></br><br></br>
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h4 class="card-title mb-0 text-primary">Liste des Demandes</h4>
-            <a href="{{ path('app_demande_new') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>Nouvelle demande
-            </a>
-        </div>
+ <div class="card shadow mb-4 border-0 rounded-3 overflow-hidden">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background-color: #007bff;">
+        <h4 class="card-title mb-0 text-white">Liste des Demandes</h4>
+    </div>
+
         <div class="card-body">
-            <p class="card-description mb-4"> liste des demandes dans le système.</p>
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-bordered">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle table-bordered shadow-sm rounded" style="font-size: 1.2rem;">
+                    <thead class="table-primary text-center">
                         <tr>
-                            <th class="text-center" style="width: 5%; background-color: #4e73df; color: white;">Id</th>
-                            <th style="width: 12%; background-color: #4e73df; color: white;">Utilisateur</th>
-                            <th style="width: 12%; background-color: #4e73df; color: white;">Admin</th>
-                            <th class="text-center" style="width: 8%; background-color: #4e73df; color: white;">Jours</th>
-                            <th style="width: 20%; background-color: #4e73df; color: white;">Description</th>
-                            <th style="width: 10%; background-color: #4e73df; color: white;">Type</th>
-                            <th style="width: 10%; background-color: #4e73df; color: white;">Statut</th>
-                            <th style="width: 12%; background-color: #4e73df; color: white;">Date Soumission</th>
-                            <th class="text-center" style="width: 15%; background-color: #4e73df; color: white;">Actions</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Statut</th>
+                            <th>Date Soumission</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for demande in demandes %}
                         <tr>
-                            <td class="text-center">{{ demande.id }}</td>
-                            <td>{{ demande.user ? demande.user.nom : 'N/A' }}</td>
-                            <td>{{ demande.admin ? demande.admin.nom : 'Aucun' }}</td>
-                            <td class="text-center">{{ demande.nbrJours }}</td>
+                            <td class="text-truncate" style="max-width: 250px;">{{ demande.description }}</td>
                             <td>
-                                {% set words = demande.description|split(' ') %}
-                                {% set description = '' %}
-                                {% for word in words %}
-                                    {% if loop.index is divisible by(15) %}
-                                        {% set description = description ~ word ~ '<br>' %}
-                                    {% else %}
-                                        {% set description = description ~ word ~ ' ' %}
-                                    {% endif %}
-                                {% endfor %}
-                                {{ description|raw }}
-                            </td>
-                            <td>
-                                <span class="badge bg-info">{{ demande.type }}</span>
+                                <span class="badge bg-secondary text-white">{{ demande.type }}</span>
                             </td>
                             <td>
                                 {% set statusClass = {
-                                    'en_attente': 'bg-warning',
+                                    'en_attente': 'bg-warning text-dark',
                                     'approuvee': 'bg-success',
                                     'rejete': 'bg-danger'
                                 } %}
@@ -63,37 +40,19 @@
                                 </span>
                             </td>
                             <td>{{ demande.dateSoumission ? demande.dateSoumission|date('d/m/Y') : 'Non spécifiée' }}</td>
-                            <td>
-                                <div class="d-flex flex-column align-items-center gap-2">
-                                    <a href="{{ path('app_demande_show', {'id': demande.id}) }}" 
-                                       class="btn btn-info btn-sm mb-2 w-100" 
-                                       title="Voir les détails">
-                                        Voir les détails
-                                    </a>
-                                    <a href="{{ path('app_demande_edit', {'id': demande.id}) }}" 
-                                       class="btn btn-warning btn-sm mb-2 w-100"
-                                       title="Modifier">
-                                        Modifier
-                                    </a>
-
-                                    {# Affichage du bouton "Valider" uniquement si le statut est "en_attente" #}
-                                    {% if demande.statut == 'en_attente' %}
-                                        <button type="button" class="btn btn-success w-100" 
-                                                title="Valider"
-                                                data-bs-toggle="modal" data-bs-target="#validationModal-{{ demande.id }}">
-                                            Valider
-                                        </button>
-                                    {% endif %}
+                            <td style="text-align: center; width: 250px;">
+                                <div style="display: inline-flex; flex-direction: row; gap: 10px; justify-content: center;">
 
                                     <form action="{{ path('app_demande_delete', {'id': demande.id}) }}" 
-                                          method="post" 
-                                          class="d-inline">
+                                          method="post" style="display: inline-block;">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ demande.id) }}">
                                         <button type="submit" 
-                                                class="btn btn-danger w-100" 
+                                                class="btn btn-danger btn-lg"
+                                                style="width: 150px;"
                                                 title="Supprimer"
                                                 onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')">
-                                            Supprimer
+                                            <i class="fas fa-trash-alt me-1"></i>
+                                            <span>Supprimer</span>
                                         </button>
                                     </form>
                                 </div>
@@ -101,8 +60,8 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="9" class="text-center py-4">
-                                <div class="alert alert-info mb-0">
+                            <td colspan="5" class="text-center py-4">
+                                <div class="alert alert-info mb-0 shadow-sm rounded">
                                     <i class="fas fa-info-circle me-2"></i>Aucune demande trouvée
                                 </div>
                             </td>
@@ -115,46 +74,98 @@
     </div>
 </div>
 
-{# Modal de validation #}
-{% for demande in demandes %}
-    <div class="modal fade" id="validationModal-{{ demande.id }}" tabindex="-1" aria-labelledby="validationModalLabel-{{ demande.id }}" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="validationModalLabel-{{ demande.id }}">Valider la demande</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ path('app_demande_validate', {'id': demande.id}) }}" method="post">
-                        <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ demande.id) }}">
-                        <p>Êtes-vous sûr de vouloir valider cette demande ?</p>
-                        <button type="submit" class="btn btn-success w-100" title="Confirmer la validation">
-                            Confirmer
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endfor %}
-
 {% block stylesheets %}
-
     <style>
-        /* Garder la couleur du texte en blanc pour toutes les cellules */
-        .table td, .table th {
-            color: white !important; /* Force la couleur du texte en blanc */
+        /* Suppression de tous les effets de focus */
+        *:focus {
+            outline: none !important;
+            box-shadow: none !important;
         }
 
-        /* Rendre les lignes de tableau légèrement grises au survol */
-        .table tbody tr:hover {
-            background-color: #f1f1f1; /* Changer la couleur de fond au survol */
+        /* Styles généraux du tableau */
+        .table-hover tbody tr:hover {
+            background-color: #f0f8ff;
+            transition: background-color 0.3s ease;
+        }
+        
+        .table th {
+            text-align: center;
+            vertical-align: middle;
+            font-weight: 600;
+            padding: 1.2rem;
         }
 
-        /* Garder la couleur du texte en blanc même lors du survol ou du clic */
-        .table tbody td:hover, .table tbody tr:hover {
-            color: white !important; /* Garder la couleur du texte en blanc */
-            background-color: #f1f1f1 !important; /* Couleur de fond au survol */
+        /* Gestion du texte tronqué */
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+
+        /* Styles des boutons */
+        .btn-lg {
+            padding: 14px 24px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border-width: 2px;
+        }
+
+        .btn-warning {
+            background-color: #ffc107 !important;
+            border-color: #ffc107 !important;
+            color: #000;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800 !important;
+            border-color: #d39e00 !important;
+        }
+
+        .btn-danger {
+            background-color: #ff4d4d !important;
+            border-color: #ff4d4d !important;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #cc0000 !important;
+            border-color: #b30000 !important;
+        }
+
+        /* Styles spécifiques */
+        .text-white {
+            color: #fff !important;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .bg-gradient-dark {
+            background: linear-gradient(90deg, #343a40, #212529);
+        }
+
+        .d-flex.gap-2 {
+            gap: 10px !important;
+        }
+
+        /* Alignement des éléments */
+        td .btn {
+            display: inline-block !important;
+            margin: 0 5px !important;
+            width: 150px !important;
+            vertical-align: middle;
+        }
+
+        form {
+            display: inline-block !important;
+            margin: 0;
+        }
+
+        /* Style de l'alerte vide */
+        .alert-info {
+            border-left: 4px solid #17a2b8;
+            background-color: #f8f9fa;
         }
     </style>
 {% endblock %}

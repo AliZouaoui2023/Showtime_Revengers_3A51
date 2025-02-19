@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DemandeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DemandeRepository::class)]
 class Demande
@@ -13,7 +14,6 @@ class Demande
     const TYPE_INTEGREFILM = 'integrefilm';
     const TYPE_BACKDROP = 'backdrop';
     
-
     const STATUT_EN_ATTENTE = 'en_attente';
     const STATUT_APPROUVEE = 'approuvee';
     const STATUT_REJETEE = 'rejete';
@@ -37,24 +37,31 @@ class Demande
     private ?User $admin = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "Le nombre de jours ne peut pas être nul.")]
+    #[Assert\Positive(message: "Le nombre de jours doit être positif.")]
     private ?int $nbrJours = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(min: 10, minMessage: "La description doit contenir au moins 10 caractères.")]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le type est obligatoire.")]
+    #[Assert\Choice(choices: [self::TYPE_FOOTER_WEB, self::TYPE_INTEGREFILM, self::TYPE_BACKDROP], message: "Type de demande invalide.")]
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: "Le lien supplémentaire doit être une URL valide.")]
     private ?string $lienSupp = null;
 
     #[ORM\Column(length: 255, options: ["default" => "en_attente"])]
+    #[Assert\Choice(choices: [self::STATUT_EN_ATTENTE, self::STATUT_APPROUVEE, self::STATUT_REJETEE], message: "Statut invalide.")]
     private ?string $statut = self::STATUT_EN_ATTENTE;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeInterface $dateSoumission = null;
 
- 
     public function getId(): ?int { return $this->id; }
     public function getUser(): ?User { return $this->user; }
     public function setUser(User $user): static { $this->user = $user; return $this; }
@@ -83,24 +90,13 @@ class Demande
     // Méthode pour calculer le montant
     public function calculerMontant(): float
     {
-        $tarifParJour = 0;
+        $tarifParJour = match ($this->type) {
+            self::TYPE_FOOTER_WEB => self::TARIF_FOOTER_WEB,
+            self::TYPE_INTEGREFILM => self::TARIF_INTEGREFILM,
+            self::TYPE_BACKDROP => self::TARIF_BACKDROP,
+            default => 0,
+        };
 
-        switch ($this->type) {
-            case self::TYPE_FOOTER_WEB:
-                $tarifParJour = self::TARIF_FOOTER_WEB;
-                break;
-            case self::TYPE_INTEGREFILM:
-                $tarifParJour = self::TARIF_INTEGREFILM;
-                break;
-            case self::TYPE_BACKDROP:
-                $tarifParJour = self::TARIF_BACKDROP;
-                break;
-            default:
-                // Vous pouvez gérer un cas par défaut si nécessaire
-                $tarifParJour = 0;
-                break;
-        }
-
-        return $tarifParJour * $this->nbrJours; // Calcul du montant total
+        return $tarifParJour * $this->nbrJours;
     }
 }
