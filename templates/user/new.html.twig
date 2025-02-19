@@ -48,32 +48,38 @@
 
         <div class="form-group">
             {{ form_label(form.Nom) }}
-            {{ form_widget(form.Nom) }}
+            {{ form_widget(form.Nom, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.Nom) }}
         </div>
 
         <div class="form-group">
             {{ form_label(form.date_de_naissance) }}
-            {{ form_widget(form.date_de_naissance) }}
+            {{ form_widget(form.date_de_naissance, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.date_de_naissance) }}
         </div>
 
         <div class="form-group">
             {{ form_label(form.email) }}
-            {{ form_widget(form.email) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.email) }}
         </div>
 
         <div class="form-group">
             {{ form_label(form.role) }}
-            {{ form_widget(form.role) }}
+            {{ form_widget(form.role, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.role) }}
         </div>
 
         <div class="form-group">
             {{ form_label(form.mot_de_passe) }}
-            {{ form_widget(form.mot_de_passe) }}
+            {{ form_widget(form.mot_de_passe, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.mot_de_passe) }}
         </div>
 
         <div class="form-group">
             {{ form_label(form.photo) }}
-            {{ form_widget(form.photo) }}
+            {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.photo) }}
         </div>
 
         <button class="btn btn-primary" type="submit">Create User</button>

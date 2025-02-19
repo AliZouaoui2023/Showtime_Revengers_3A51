@@ -125,25 +125,13 @@
                 <div class="row">
                     {{ form_label(form.email) }}
                     {{ form_widget(form.email) }}
-                    {% if form.email.vars.errors|length > 0 %}
-                        <div class="form-error">
-                            {% for error in form.email.vars.errors %}
-                                <p>{{ error.message }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                    {{ form_errors(form.email) }}
                 </div>
 
                 <div class="row">
                     {{ form_label(form.mot_de_passe) }}
                     {{ form_widget(form.mot_de_passe) }}
-                    {% if form.mot_de_passe.vars.errors|length > 0 %}
-                        <div class="form-error">
-                            {% for error in form.mot_de_passe.vars.errors %}
-                                <p>{{ error.message }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                    {{ form_errors(form.mot_de_passe) }}
                 </div>
 
                 <button type="submit">Login</button>

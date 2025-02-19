@@ -1,0 +1,112 @@
+{% block title %}Edit Your Profile{% endblock %}
+
+{% block body %}
+    <style>
+        /* Global styles */
+        body {
+            background-image: url('/front/images/uploads/slider-bg.jpg'); /* Add your background image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+        }
+
+        /* Account container */
+        .account-container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Heading */
+        .account-container h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Account form */
+        .account-form {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        /* Form fields */
+        .account-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .account-form label {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .account-form input,
+        .account-form select,
+        .account-form textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        .account-form button {
+            background-color: #007bff; /* Blue background */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .account-form button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Back to account link */
+        .back-to-account {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #6c757d; /* Gray background */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-to-account:hover {
+            background-color: #5a6268; /* Darker gray on hover */
+        }
+    </style>
+
+    <div class="account-container">
+        <h1>Edit Your Profile</h1>
+
+        <div class="account-form">
+            <form method="post">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn">Save Changes</button>
+                {{ form_end(form) }}
+            </form>
+        </div>
+
+        <a href="{{ path('app_user_account') }}" class="back-to-account">Back to your account</a>
+    </div>
+{% endblock %}

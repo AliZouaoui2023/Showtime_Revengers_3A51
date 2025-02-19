@@ -17,12 +17,13 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le nom est obligatoire.")]
-    #[Assert\Length(min: 2, minMessage: "Le nom doit contenir au moins 2 caractères.")]
+    #[Assert\Regex(
+        pattern: "/^[A-Za-zÀ-ÿéèêôîçïù]+$/",
+        message: "Le nom ne doit contenir que des lettres (sans chiffres)."
+    )]
     private ?string $Nom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\NotBlank(message: "La date de naissance est obligatoire.")]
     private ?\DateTimeInterface $date_de_naissance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -31,7 +32,6 @@ class User
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le rôle est obligatoire.")]
     private ?string $role = null;
 
     #[ORM\Column(length: 255)]

@@ -43,9 +43,14 @@
 <div class="login-wrapper" id="login-content">
     <div class="login-content">
         <a href="#" class="close">x</a>
+		        	<!-- Button that redirects to the account page -->
+        <a href="{{ path('app_user_account') }}">
+            <button type="button">Go to your Account</button>
+        </a>
+		<br></br>
+		<br></br>
         <h3>Login</h3>
         <form method="post" action="#">
-        	
            <!-- Button to go to the login form -->
 <a href="{{ path('frontend_login') }}">
     <button type="button">Login</button>
@@ -68,6 +73,7 @@
     </div>
 </div>
 <!--end of signup form redirect-->
+
 
 
 <!-- BEGIN | Header -->
