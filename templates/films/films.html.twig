@@ -1,0 +1,25 @@
+{% extends 'Front/base.html.twig' %}
+
+{% block title %}Nos Films{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="text-center text-primary">🎬 Nos Films</h1>
+
+    <div class="row">
+        {% for film in films %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ film.NomFilm }}</h5>
+                        <p class="card-text"><strong>Réalisateur :</strong> {{ film.Realisateur }}</p>
+                        <p class="card-text"><strong>Genre :</strong> {{ film.Genre }}</p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center text-danger">Aucun film disponible.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

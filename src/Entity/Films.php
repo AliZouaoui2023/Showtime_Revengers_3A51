@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\FilmsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FilmsRepository::class)]
 class Films
@@ -15,15 +16,31 @@ class Films
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Nom du film ne doit pas être vide.")]
+    #[Assert\Regex(
+        pattern: '/^[A-Z]/',
+        message: 'Le nom du film doit commencer par une lettre majuscule.'
+    )]
     private ?string $Nom_Film = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank(message: "La date de production ne doit pas être vide.")]
+    #[Assert\LessThanOrEqual(
+        "today",
+        message: "La date de production ne peut pas être dans le futur."
+    )]
     private ?\DateTimeInterface $Date_Production = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom du réalisateur ne doit pas être vide.")]
+    #[Assert\Regex(
+        pattern: '/^[A-Z]/',
+        message: 'Le nom du réalisateur doit commencer par une lettre majuscule.'
+    )]
     private ?string $Realisateur = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le genre ne doit pas être vide.")]
     private ?string $Genre = null;
 
     public function getId(): ?int
@@ -39,7 +56,6 @@ class Films
     public function setNomFilm(string $Nom_Film): static
     {
         $this->Nom_Film = $Nom_Film;
-
         return $this;
     }
 
@@ -51,7 +67,6 @@ class Films
     public function setDateProduction(\DateTimeInterface $Date_Production): static
     {
         $this->Date_Production = $Date_Production;
-
         return $this;
     }
 
@@ -63,7 +78,6 @@ class Films
     public function setRealisateur(string $Realisateur): static
     {
         $this->Realisateur = $Realisateur;
-
         return $this;
     }
 
@@ -75,7 +89,6 @@ class Films
     public function setGenre(string $Genre): static
     {
         $this->Genre = $Genre;
-
         return $this;
     }
 }
