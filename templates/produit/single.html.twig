@@ -1,0 +1,93 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Détails du Produit{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row d-flex align-items-center">
+            <!-- Image du produit -->
+            <div class="col-md-5 col-sm-12">
+                <div class="product-img sticky-sb text-center">
+                    {% if produit.image %}
+                        <img src="{{ asset('uploads/images/' ~ produit.image) }}" alt="{{ produit.nom }}" class="img-fluid rounded shadow-lg">
+                    {% else %}
+                        <span class="text-muted">Aucune image disponible</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Détails du produit -->
+            <div class="col-md-7 col-sm-12">
+                <div class="product-details p-4 rounded shadow-sm bg-white">
+                    <h1 class="product-title text-dark fw-bold text-uppercase">{{ produit.nom }}</h1>
+                    <p class="product-category text-muted"><strong>Catégorie :</strong> {{ produit.categorie }}</p>
+                    <p class="product-price text-success fw-bold"><strong>Prix :</strong> {{ produit.prix }} TND</p>
+                    <p class="product-date text-secondary"><strong>Date :</strong> {{ produit.date ? produit.date|date('d/m/Y H:i') : 'Non spécifiée' }}</p>
+                    <div class="product-description mt-3">
+                        <h5 class="fw-bold">Description :</h5>
+                        <p class="text-muted">{{ produit.description }}</p>
+                    </div>
+
+                    <div class="product-buttons mt-4 d-flex gap-3">
+                        <a href="{{ path('commander', {'id': produit.id}) }}" class="btn btn-lg btn-success rounded-pill px-4 py-2">🛒 Commander</a>
+                        <a href="{{ path('app_produit_list') }}" class="btn btn-lg btn-outline-info rounded-pill px-4 py-2">↩ Retour à la liste</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .product-img img {
+            border-radius: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .product-img img:hover {
+            transform: scale(1.05);
+        }
+
+        .product-title {
+            font-size: 2.2rem;
+            color: #343a40;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .product-category,
+        .product-price,
+        .product-date {
+            font-size: 1.2rem;
+            margin: 8px 0;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: #28a745;
+        }
+
+        .product-description p {
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+        .product-buttons .btn {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .product-buttons .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .sticky-sb {
+            position: sticky;
+            top: 10px;
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Modifier Commande{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Modifier la Commande</h1>
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="card p-4 shadow-sm">
+            {{ include('commande/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+
+        <div class="mt-3">
+            <a href="{{ path('app_commande_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            {{ include('commande/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}
