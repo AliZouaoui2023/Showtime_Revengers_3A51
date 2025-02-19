@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 
 class SeanceType extends AbstractType
@@ -19,7 +20,16 @@ class SeanceType extends AbstractType
             ->add('dateSeance', null, [
                 'widget' => 'single_text'
             ])
-            ->add('duree')
+            ->add('duree', TimeType::class, [
+                'widget' => 'single_text',
+                'input'  => 'datetime',
+                'required' => true,
+                'html5' => false, // Si vous ne voulez pas que le champ soit un input de type time natif
+                'attr' => [
+                    'placeholder' => 'HH:MM:SS',
+                    'class' => 'timepicker' // Ajoutez une classe pour le style ou le JavaScript si nécessaire
+                ]
+            ])
             ->add('objectifs', TextareaType::class, [
                 'attr' => [
                     'class' => 'form-control',

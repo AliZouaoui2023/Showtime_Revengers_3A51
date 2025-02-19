@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+    <!-- Basic need -->
+    <title>{% block title %}Open Pediatrics{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="profile" href="#">
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
+
+    <!-- Mobile specific meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- CSS files -->
+    <link rel="stylesheet" href="../../Front/css/plugins.css">
+    <link rel="stylesheet" href="../../Front/css/style.css">
+
+    <style>
+        /* Styles CSS ici */
+        :root {
+            --primary-color: #0088ff;
+            --dark-bg: #020d18;
+            --card-bg: rgba(29, 39, 49, 0.9);
+        }
+
+        body {
+            background: linear-gradient(rgba(2, 13, 24, 0.95), rgba(2, 13, 24, 0.95)),
+                        url("../../images/movies-pattern.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .ht-header {
+            background: rgba(2, 13, 24, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            top: 0;
+        }
+
+        .navbar-custom {
+            padding: 15px 0;
+        }
+
+        .navbar-header .logo {
+            max-height: 40px;
+            padding: 0;
+        }
+
+        .nav.navbar-nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-default.dropdown-toggle {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-default.dropdown-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-top: 100px;
+            padding: 30px 0;
+        }
+
+        /* Footer Styles */
+        .ht-footer {
+            background: rgba(2, 13, 24, 0.9);
+            color: white;
+            padding: 20px 0;
+        }
+
+        /* Autres styles ici... */
+    </style>
+</head>
+
+<body>
+    {% block header %}
+    <header class="ht-header">
+        <div class="container">
+            <nav class="navbar navbar-default navbar-custom">
+                <div class="navbar-header logo">
+                    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <div id="nav-icon1">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <a href="index.html">
+                        <img class="logo" src="../../Front/images/show.png" alt="Logo">
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav flex-child-menu menu-left">
+                        <li><a href="{{ path('app_cour_indexx') }}" class="btn btn-default">List Cour</a></li>
+                        <li><a class="btn btn-default">Participer</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    {% endblock %}
+
+    <div class="main-content">
+        {% block body %}
+        <p>Contenu principal ici</p>
+        {% endblock %}
+    </div>
+
+    {% block footer %}
+    <footer class="ht-footer">
+        <div class="container">
+            <div class="flex-parent-ft">
+                <div class="flex-child-ft item1">
+                    <a href="index-2.html"><img class="logo" src="../../Front/images/show.png" alt=""></a>
+                    <p>5th Avenue st, Manhattan<br>New York, NY 10001</p>
+                    <p>Call us: <a href="#">(+01) 202 342 6789</a></p>
+                </div>
+                <div class="flex-child-ft item2">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blockbuster</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Forums</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item3">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item4">
+                    <h4>Account</h4>
+                    <ul>
+                        <li><a href="#">My Account</a></li>
+                        <li><a href="#">Watchlist</a></li>
+                        <li><a href="#">Collections</a></li>
+                        <li><a href="#">User Guide</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item5">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to our newsletter system now <br> to get the latest news from us.</p>
+                    <form action="#">
+                        <input type="text" placeholder="Enter your email...">
+                    </form>
+                    <a href="#" class="btn">Subscribe now <i class="ion-ios-arrow-forward"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+
+    <!-- Scripts -->
+    <script src="../../Front/js/jquery.js"></script>
+    <script src="../../Front/js/plugins.js"></script>
+    <script src="../../Front/js/custom.js"></script>
+</body>
+
+</html>

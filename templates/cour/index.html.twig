@@ -77,8 +77,8 @@
                             <td>{{ cour.id }}</td>
                             <td>{{ cour.typeCour }}</td>
                             <td>{{ cour.cout }}</td>
-                            <td>{{ cour.dateDebut ? cour.dateDebut|date('Y-m-d') : '' }}</td>
-                            <td>{{ cour.dateFin ? cour.dateFin|date('Y-m-d') : '' }}</td>
+                          <td>{{ cour.dateDebut ? cour.dateDebut|date('d/m/Y H:i') : '' }}</td>
+                        <td>{{ cour.dateFin ? cour.dateFin|date('d/m/Y H:i') : '' }}</td>
                             <td class="actions-column">
                                 <div class="action-buttons">
                                    {# Bouton Show #}
@@ -92,10 +92,8 @@
 </a>
 
 {# Bouton Supprimer (existant) #}
-<form method="POST" 
-      action="{{ path('app_cour_delete', {'id': cour.id}) }}" 
-      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?');"
-      class="d-inline">
+<form method="POST" action="{{ path('app_cour_delete', {'id': cour.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?');" 
+  class="d-inline">
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cour.id) }}">
     <button type="submit" class="btn btn-sm btn-danger">

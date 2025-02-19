@@ -1,5 +1,4 @@
-{{ form_start(form) }}
-
+{{ form_start(form, {'attr': { 'novalidate': 'novalidate'}}) }}
 <div class="form-group">
     {{ form_label(form.dateSeance) }}
     {{ form_widget(form.dateSeance, {'attr': {'class': 'form-control'}}) }}
@@ -8,7 +7,8 @@
 
 <div class="form-group">
     {{ form_label(form.duree) }}
-    {{ form_widget(form.duree, {'attr': {'class': 'form-control'}}) }}
+  {{ form_widget(form.duree, {'attr': {'class': 'form-control', 'type': 'time'}}) }}
+
     {{ form_errors(form.duree) }}
 </div>
 

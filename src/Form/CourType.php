@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class CourType extends AbstractType
 {
@@ -28,18 +29,22 @@ class CourType extends AbstractType
             'label' => 'Coût',
             'attr' => [
                 'placeholder' => 'Ex: 150.000',
+                'step' => '0.001', // Permet 3 chiffres après la virgule
+                'min' => '0.001', // Évite les valeurs négatives
                 'class' => 'currency-input'
             ],
-            'html5' => true,
-            'scale' => 2 // Pour les décimales
         ])
             
-            ->add('dateDebut', null, [
-                'widget' => 'single_text'
-            ])
-            ->add('dateFin', null, [
-                'widget' => 'single_text'
-            ])
+        ->add('dateDebut', DateTimeType::class, [
+            'widget' => 'single_text',  // Affiche un input de type datetime-local
+            'html5' => true,           // Active le sélecteur de date HTML5
+            'attr' => ['class' => 'form-control']
+        ])
+        ->add('dateFin', DateTimeType::class, [
+            'widget' => 'single_text',
+            'html5' => true,
+            'attr' => ['class' => 'form-control']
+        ])
         ;
     }
 

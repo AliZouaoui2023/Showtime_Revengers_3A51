@@ -77,7 +77,7 @@
                             <tr class="table-info">
                                 <td>{{ seance.id }}</td>
                                 <td>{{ seance.dateSeance ? seance.dateSeance|date('Y-m-d') : '' }}</td>
-                                <td>{{ seance.duree }}</td>
+                                <td>{{ seance.duree ? seance.duree|date('H:i:s') : '' }}</td>
                                 <td>{{ seance.objectifs }}</td>
                                 <td>{{ seance.cour ? seance.cour.typeCour : 'Non défini' }}</td>
                                 <td class="actions-column">
@@ -85,9 +85,11 @@
                                         <a href="{{ path('app_seance_show', {'id': seance.id}) }}" class="btn btn-sm btn-info">
                                             <i class="mdi mdi-eye"></i> Voir
                                         </a>
+                                        
                                         <a href="{{ path('app_seance_edit', {'id': seance.id}) }}" class="btn btn-sm btn-warning">
                                             <i class="mdi mdi-pencil"></i> Modifier
                                         </a>
+
                                         <form method="POST" action="{{ path('app_seance_delete', {'id': seance.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette séance ?');" class="d-inline">
                                             <input type="hidden" name="_method" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ seance.id) }}">

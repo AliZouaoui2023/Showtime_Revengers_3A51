@@ -7,7 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\User; // Import de la classe User
+use App\Entity\User; 
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CourRepository::class)]
 class Cour
@@ -18,15 +19,26 @@ class Cour
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le type de cours ne doit pas être vide.")]
     private ?string $typeCour = null;
 
-    #[ORM\Column]
+  
+    #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 3)] // 10 chiffres max, 3 après la virgule
+    #[Assert\NotBlank(message: "Le coût ne doit pas être vide.")]
+    #[Assert\Positive(message: "Le coût doit être un nombre positif.")]
+    #[Assert\Type(type: 'numeric', message: "Le coût doit être un nombre valide.")]
     private ?float $cout = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message: "La date de début ne doit pas être vide.")]
     private ?\DateTimeInterface $dateDebut = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message: "La date de fin ne doit pas être vide.")]
+    #[Assert\GreaterThan(
+        propertyPath: "dateDebut",
+        message: "La date de fin doit être supérieur à la date de début."
+    )]
     private ?\DateTimeInterface $dateFin = null;
     
 

@@ -1,0 +1,170 @@
+{% extends 'Front/mabase.html.twig' %}
+
+{% block title %}Cour{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        .container-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            width: 80%;
+            max-width: 1000px;
+            padding: 30px;
+            box-shadow: 0px 4px 15px rgba(255, 16, 16, 0.2);
+            border-radius: 15px;
+            background: #ffffff;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table-custom {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        .table-custom th, 
+        .table-custom td {
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #dee2e6;
+        }
+
+        .table-custom th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .btn-participate {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-participate:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .modal-custom .modal-content {
+            border-radius: 15px;
+            padding: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-custom">
+    <div class="card">
+        <div class="card-body">
+            <h2 style="display: flex; align-items: center; justify-content: center; margin: 30px 0 50px;" class="table-title">
+                🎥 Liste des Cours 🎭
+            </h2>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 120px;">TypeCour</th>
+                            <th style="width: 80px;">Cout</th>
+                            <th style="width: 150px;">DateDebut</th>
+                            <th style="width: 150px;">DateFin</th>
+                            <th style="width: 120px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cour in cours %}
+                            <tr class="table-info">
+                                <td>{{ cour.typeCour }}</td>
+                                <td>{{ cour.cout }} DT</td>
+                                <td>{{ cour.dateDebut ? cour.dateDebut|date('d/m/Y H:i') : '' }}</td>
+                                <td>{{ cour.dateFin ? cour.dateFin|date('d/m/Y H:i') : '' }}</td>
+                                <td>
+                                    <button class="btn-participate" data-bs-toggle="modal" data-bs-target="#participationModal">
+                                        Participer
+                                    </button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr class="table-danger">
+                                <td colspan="5">Aucun cours trouvé</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade modal-custom" id="participationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Formulaire de participation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="participationForm">
+                    <div class="mb-3">
+                        <label for="participantName" class="form-label">Nom complet</label>
+                        <input type="text" class="form-control" id="participantName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="participantEmail" class="form-label">Adresse email</label>
+                        <input type="email" class="form-control" id="participantEmail" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" onclick="submitParticipation()">Confirmer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function submitParticipation() {
+        const name = document.getElementById('participantName').value;
+        const email = document.getElementById('participantEmail').value;
+
+        if (name && email) {
+            // Simulation d'envoi de données
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Inscription réussie !',
+                    text: 'Merci pour votre participation !',
+                    confirmButtonColor: '#28a745'
+                });
+                $('#participationModal').modal('hide');
+                document.getElementById('participationForm').reset();
+            }, 1000);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Veuillez remplir tous les champs',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    }
+</script>
+{% endblock %}

@@ -23,6 +23,15 @@ final class CourController extends AbstractController{
         ]);
     }
 
+    #[Route('/newfront',name: 'app_cour_indexx', methods: ['GET'])]
+    public function indexx(CourRepository $courRepository): Response
+    {
+        return $this->render('Front/indexmabase.html.twig', [
+            'cours' => $courRepository->findAll(),
+        ]);
+    }
+
+    
     #[Route('/new', name: 'app_cour_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -73,23 +82,16 @@ final class CourController extends AbstractController{
         ]);
     }
 
-    #[Route('/{id}', name: 'app_cour_delete', methods:['GET', 'POST'])]
-public function delete(
-    Request $request, 
-    Cour $cour, 
-    EntityManagerInterface $entityManager
-): Response {
-    if ($this->isCsrfTokenValid('delete' . $cour->getId(), $request->request->get('_token'))) {
-        $entityManager->remove($cour);
-        $entityManager->flush();
-        $this->addFlash('success', 'Cours supprimé avec succès');
-    } else {
-        $this->addFlash('error', 'Erreur de sécurité');
+    #[Route('/{id}', name: 'app_cour_delete', methods: ['POST'])]
+    public function delete(Request $request, Cour $cour, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$cour->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($cour);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_cour_index', [], Response::HTTP_SEE_OTHER);
     }
-
-    return $this->redirectToRoute('app_cour_index');
-}
-
 
     #[Route('/{id}/inscrire/{clientId}', name: 'app_cour_inscrire', methods: ['POST'])]
     public function inscrireClient(int $id, int $clientId, CourRepository $courRepository, ClientRepository $clientRepository, EntityManagerInterface $entityManager): Response
