@@ -29,15 +29,15 @@ class CourType extends AbstractType
             'label' => 'Coût',
             'attr' => [
                 'placeholder' => 'Ex: 150.000',
-                'step' => '0.001', // Permet 3 chiffres après la virgule
-                'min' => '0.001', // Évite les valeurs négatives
+                'step' => '0.001', 
+                'min' => '0.001', 
                 'class' => 'currency-input'
             ],
         ])
             
         ->add('dateDebut', DateTimeType::class, [
-            'widget' => 'single_text',  // Affiche un input de type datetime-local
-            'html5' => true,           // Active le sélecteur de date HTML5
+            'widget' => 'single_text',  
+            'html5' => true,         
             'attr' => ['class' => 'form-control']
         ])
         ->add('dateFin', DateTimeType::class, [

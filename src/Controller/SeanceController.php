@@ -30,16 +30,16 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
     $form->handleRequest($request);
 
     if ($form->isSubmitted()) {
-        // Vérifiez si le formulaire est valide
+    
         if ($form->isValid()) {
             $entityManager->persist($seance);
             $entityManager->flush();
 
-            // Rediriger vers la liste des séances après l'ajout
+            
             return $this->redirectToRoute('app_seance_index');
         } else {
-            // Affichez les erreurs du formulaire
-            dump($form->getErrors(true, false)); // Affichez les erreurs pour le débogage
+           
+            dump($form->getErrors(true, false)); 
         }
     }
 

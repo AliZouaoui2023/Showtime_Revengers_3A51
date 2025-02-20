@@ -91,14 +91,12 @@ final class CourController extends AbstractController
 
     #[Route('/{id}/inscrire', name: 'app_cour_inscrire', methods: ['POST'])]
     public function inscrire(Cour $cour, EntityManagerInterface $entityManager): Response {
-        // Récupérer l'utilisateur avec ID 3
         $user = $entityManager->getRepository(User::class)->find(3);
 
         if (!$user) {
             return $this->json(['success' => false, 'message' => 'Utilisateur non trouvé.'], Response::HTTP_NOT_FOUND);
         }
 
-        // Ajout de l'utilisateur au cours
         $cour->addUser($user);
         $entityManager->persist($cour);
         $entityManager->flush();

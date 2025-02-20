@@ -23,21 +23,28 @@ class Cour
     private ?string $typeCour = null;
 
   
-    #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 3)] // 10 chiffres max, 3 après la virgule
-    #[Assert\NotBlank(message: "Le coût ne doit pas être vide.")]
-    #[Assert\Positive(message: "Le coût doit être un nombre positif.")]
-    #[Assert\Type(type: 'numeric', message: "Le coût doit être un nombre valide.")]
+    #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 3)]
+    #[Assert\LessThanOrEqual(value: 9999.999, message: "Le coût ne doit pas dépasser 9999.999")]
+
+    #[Assert\NotBlank(message: "Le coût ne doit pas être vide")]
+    #[Assert\Positive(message: "Le coût doit être un nombre positif")]
+    #[Assert\Type(type: 'numeric', message: "Le coût doit être un nombre valide")]
+    #[Assert\Regex(
+        pattern: "/^\d+(\.\d{1,3})?$/",
+        message: "Le coût doit avoir au maximum 3 chiffres après la virgule"
+    )]
     private ?float $cout = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank(message: "La date de début ne doit pas être vide.")]
+    #[Assert\NotBlank(message: "La date de début ne doit pas être vide")]
+   
     private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank(message: "La date de fin ne doit pas être vide.")]
     #[Assert\GreaterThan(
         propertyPath: "dateDebut",
-        message: "La date de fin doit être supérieur à la date de début."
+        message: "La date de fin doit être supérieur à la date de début"
     )]
     private ?\DateTimeInterface $dateFin = null;
     
@@ -55,9 +62,6 @@ class Cour
     private Collection $seances;
 
     /**
-     * Relation ManyToMany vers l'entité User.
-     * La relation est mappée par la propriété "cours" de l'entité User.
-     *
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'cours')]
@@ -144,7 +148,7 @@ class Cour
     public function removeSeance(Seance $seance): static
     {
         if ($this->seances->removeElement($seance)) {
-            // Réinitialiser la propriété propriétaire si nécessaire
+            
             if ($seance->getCour() === $this) {
                 $seance->setCour(null);
             }
@@ -174,7 +178,7 @@ class Cour
     public function removeEvenement(Evenement $evenement): static
     {
         if ($this->evenements->removeElement($evenement)) {
-            // Réinitialiser la propriété propriétaire si nécessaire
+           
             if ($evenement->getCour() === $this) {
                 $evenement->setCour(null);
             }
@@ -195,7 +199,7 @@ class Cour
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->addCour($this); // Met à jour la relation réciproque
+            $user->addCour($this); 
         }
 
         return $this;

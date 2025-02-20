@@ -153,7 +153,7 @@
         </div>
     </div>
 
-    <!-- Modal de confirmation de participation -->
+    
     <div id="participateModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -165,16 +165,16 @@
     </div>
 
     <script>
-        // Variable pour stocker l'id du cours sélectionné
+      
         let selectedCourseId = null;
 
-        // Récupérer le modal et les boutons
+        
         const modal = document.getElementById('participateModal');
         const closeBtn = document.querySelector('.close');
         const confirmBtn = document.getElementById('confirmParticipation');
         const cancelBtn = document.getElementById('cancelParticipation');
 
-        // Sélectionner tous les boutons "Participer" avec data-cour-id
+       
         const participateButtons = document.querySelectorAll('.btn-participate[data-cour-id]');
         participateButtons.forEach(function(btn) {
             btn.addEventListener('click', function(e) {
@@ -184,7 +184,7 @@
             });
         });
 
-        // Fermer le modal en cliquant sur la croix ou Annuler
+        
         closeBtn.addEventListener('click', function() {
             modal.style.display = 'none';
             selectedCourseId = null;
@@ -194,10 +194,10 @@
             selectedCourseId = null;
         });
 
-        // Action lors de la confirmation
+        
         confirmBtn.addEventListener('click', function() {
             if (selectedCourseId) {
-                fetch(`/cour/${selectedCourseId}/inscrire`, { // Envoie uniquement l'ID du cours
+                fetch(`/cour/${selectedCourseId}/inscrire`, { 
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -214,7 +214,7 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        alert(data.message); // Affiche "Participation enregistrée avec succès"
+                        alert(data.message); 
                     } else {
                         alert('Une erreur est survenue: ' + data.message);
                     }
@@ -230,7 +230,7 @@
             }
         });
 
-        // Fermer le modal en cliquant en dehors du contenu
+    
         window.addEventListener('click', function(e) {
             if (e.target == modal) {
                 modal.style.display = 'none';
