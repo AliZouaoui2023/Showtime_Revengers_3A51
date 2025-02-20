@@ -3186,7 +3186,7 @@ button.close {
 .navbar-header,
 .navbar-collapse,
 .modal-footer {
-  *zoom: 1;
+  zoom: 1;
 }
 .clearfix:before,
 .clearfix:after,
@@ -3938,7 +3938,7 @@ textarea {
 /* III. COMPONENT
 ***********************/
 .row {
-  *zoom: 1;
+  zoom: 1;
 }
 .row:before,
 .row:after {
@@ -8283,4 +8283,28 @@ footer.full-width-ft .ft-copyright {
   color: #8c9296;
   font-family: 'Dosis', sans-serif;
   font-weight: 700;
+}
+
+.content-wrapper {
+  padding: 20px;
+  margin-top: 100px; /* Match main-content margin from base */
+  color: #333; /* Dark text for better contrast */
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+}
+
+.table-custom {
+  color: white;
+}
+
+.table-custom th {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.btn-participate {
+  background-color: var(--primary-color);
 }

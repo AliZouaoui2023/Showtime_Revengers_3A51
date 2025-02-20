@@ -3,26 +3,27 @@
 
 <head>
     <!-- Basic need -->
-    <title>{% block title %}Open Pediatrics{% endblock %}</title>
+    <title>{% block title %}Front{% endblock %}</title>
     <meta charset="UTF-8">
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
     <link rel="profile" href="#">
-
+    
+{% block stylesheets %}
     <!-- Google Font -->
-    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
+    <link rel="stylesheet" href="{{ asset('https://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600') }}">
 
     <!-- Mobile specific meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
 
     <!-- CSS files -->
-    <link rel="stylesheet" href="../../Front/css/plugins.css">
-    <link rel="stylesheet" href="../../Front/css/style.css">
+    <link rel="stylesheet" href="{{ asset('Front/css/plugins.css') }}">
+    <link rel="stylesheet" href="{{ asset('Front/css/style.css') }}">
+{% endblock %}
 
     <style>
-        /* Styles CSS ici */
         :root {
             --primary-color: #0088ff;
             --dark-bg: #020d18;
@@ -31,7 +32,7 @@
 
         body {
             background: linear-gradient(rgba(2, 13, 24, 0.95), rgba(2, 13, 24, 0.95)),
-                        url("../../images/movies-pattern.jpg");
+                        url("{{ asset('images/movies-pattern.jpg') }}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -42,7 +43,6 @@
             min-height: 100vh;
         }
 
-        /* Header Styles */
         .ht-header {
             background: rgba(2, 13, 24, 0.9);
             backdrop-filter: blur(10px);
@@ -79,20 +79,16 @@
             color: var(--primary-color);
         }
 
-        /* Main Content Styles */
         .main-content {
             margin-top: 100px;
             padding: 30px 0;
         }
 
-        /* Footer Styles */
         .ht-footer {
             background: rgba(2, 13, 24, 0.9);
             color: white;
             padding: 20px 0;
         }
-
-        /* Autres styles ici... */
     </style>
 </head>
 
@@ -110,9 +106,9 @@
                             <span></span>
                         </div>
                     </div>
-                    <a href="index.html">
-                        <img class="logo" src="../../Front/images/show.png" alt="Logo">
-                    </a>
+                  
+                        <img class="logo" src="{{ asset('Front/images/show.png') }}" alt="Logo">
+                
                 </div>
                 <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav flex-child-menu menu-left">
@@ -127,7 +123,7 @@
 
     <div class="main-content">
         {% block body %}
-        <p>Contenu principal ici</p>
+        <!-- Le contenu spécifique des pages enfants viendra ici -->
         {% endblock %}
     </div>
 
@@ -136,7 +132,9 @@
         <div class="container">
             <div class="flex-parent-ft">
                 <div class="flex-child-ft item1">
-                    <a href="index-2.html"><img class="logo" src="../../Front/images/show.png" alt=""></a>
+                    
+                        <img class="logo" src="{{ asset('Front/images/show.png') }}" alt="">
+                    
                     <p>5th Avenue st, Manhattan<br>New York, NY 10001</p>
                     <p>Call us: <a href="#">(+01) 202 342 6789</a></p>
                 </div>
@@ -182,9 +180,8 @@
     {% endblock %}
 
     <!-- Scripts -->
-    <script src="../../Front/js/jquery.js"></script>
-    <script src="../../Front/js/plugins.js"></script>
-    <script src="../../Front/js/custom.js"></script>
+    <script src="{{ asset('Front/js/jquery.js') }}"></script>
+    <script src="{{ asset('Front/js/plugins.js') }}"></script>
+    <script src="{{ asset('Front/js/custom.js') }}"></script>
 </body>
-
 </html>

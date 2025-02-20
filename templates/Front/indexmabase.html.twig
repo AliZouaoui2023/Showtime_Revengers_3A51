@@ -1,170 +1,241 @@
 {% extends 'Front/mabase.html.twig' %}
 
-{% block title %}Cour{% endblock %}
-
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
-        .container-custom {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
+        .content-wrapper {
+            padding: 2rem;
+            margin-top: 80px;
         }
-
         .card {
-            width: 80%;
-            max-width: 1000px;
-            padding: 30px;
-            box-shadow: 0px 4px 15px rgba(255, 16, 16, 0.2);
+            background: var(--card-bg, #1a1a1a);
             border-radius: 15px;
-            background: #ffffff;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
+        .card-body {
+            color: var(--text-color, #ffffff);
+        }
+        h2 {
+            font-family: 'Dosis', sans-serif;
+            color: var(--primary-color, #3498db);
+            margin-bottom: 2rem;
+        }
         .table-responsive {
             overflow-x: auto;
+            margin-top: 1rem;
         }
-
         .table-custom {
             width: 100%;
-            table-layout: fixed;
             border-collapse: collapse;
+            background: var(--dark-bg, #2a2a2a);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .table-custom th, 
-        .table-custom td {
-            padding: 12px;
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid #dee2e6;
-        }
-
         .table-custom th {
-            background-color: #f8f9fa;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--primary-color, #3498db);
+            padding: 1rem;
             font-weight: 600;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
-
+        .table-custom td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.3s ease;
+        }
+        .table-custom tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
         .btn-participate {
-            background-color: #28a745;
+            background: var(--primary-color, #3498db);
             color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
             border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            width: 120px;
         }
-
         .btn-participate:hover {
-            background-color: #218838;
             transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-
-        .modal-custom .modal-content {
-            border-radius: 15px;
-            padding: 20px;
+        /* Styles du modal de confirmation */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background: #fff;
+            margin: 10% auto;
+            padding: 2rem;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            position: relative;
+            text-align: center;
+        }
+        .modal-content h2 {
+            color: #333;
+            font-family: 'Dosis', sans-serif;
+            margin-bottom: 1rem;
+        }
+        .modal-content p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        .modal-content button {
+            margin: 0 0.5rem;
+        }
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .text-muted {
+            color: rgb(0, 0, 0);
+            font-style: italic;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-custom">
-    <div class="card">
-        <div class="card-body">
-            <h2 style="display: flex; align-items: center; justify-content: center; margin: 30px 0 50px;" class="table-title">
-                🎥 Liste des Cours 🎭
-            </h2>
-
-            <div class="table-responsive">
-                <table class="table table-bordered table-custom">
-                    <thead>
-                        <tr>
-                            <th style="width: 120px;">TypeCour</th>
-                            <th style="width: 80px;">Cout</th>
-                            <th style="width: 150px;">DateDebut</th>
-                            <th style="width: 150px;">DateFin</th>
-                            <th style="width: 120px;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cour in cours %}
-                            <tr class="table-info">
-                                <td>{{ cour.typeCour }}</td>
-                                <td>{{ cour.cout }} DT</td>
-                                <td>{{ cour.dateDebut ? cour.dateDebut|date('d/m/Y H:i') : '' }}</td>
-                                <td>{{ cour.dateFin ? cour.dateFin|date('d/m/Y H:i') : '' }}</td>
-                                <td>
-                                    <button class="btn-participate" data-bs-toggle="modal" data-bs-target="#participationModal">
-                                        Participer
-                                    </button>
-                                </td>
+    <div class="content-wrapper">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center">
+                    🎥 Liste des Cours 🎭
+                </h2>
+                <div class="table-responsive">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>TypeCour</th>
+                                <th>Cout</th>
+                                <th>DateDebut</th>
+                                <th>DateFin</th>
+                                <th>Actions</th>
                             </tr>
-                        {% else %}
-                            <tr class="table-danger">
-                                <td colspan="5">Aucun cours trouvé</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for cour in cours %}
+                                <tr>
+                                    <td>{{ cour.typeCour }}</td>
+                                    <td>{{ cour.cout }} DT</td>
+                                    <td>{{ cour.dateDebut|date('d/m/Y H:i') }}</td>
+                                    <td>{{ cour.dateFin|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        <button class="btn-participate" data-cour-id="{{ cour.id }}">Participer</button>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-muted">Aucun cours trouvé</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal -->
-<div class="modal fade modal-custom" id="participationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <!-- Modal de confirmation de participation -->
+    <div id="participateModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Formulaire de participation</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="participationForm">
-                    <div class="mb-3">
-                        <label for="participantName" class="form-label">Nom complet</label>
-                        <input type="text" class="form-control" id="participantName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="participantEmail" class="form-label">Adresse email</label>
-                        <input type="email" class="form-control" id="participantEmail" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" onclick="submitParticipation()">Confirmer</button>
-            </div>
+            <span class="close">&times;</span>
+            <h2>Confirmation de participation</h2>
+            <p>Êtes-vous sûr de vouloir participer à ce cours ?</p>
+            <button id="confirmParticipation" class="btn-participate">Confirmer</button>
+            <button id="cancelParticipation" class="btn-participate" style="background: gray;">Annuler</button>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    function submitParticipation() {
-        const name = document.getElementById('participantName').value;
-        const email = document.getElementById('participantEmail').value;
+    <script>
+        // Variable pour stocker l'id du cours sélectionné
+        let selectedCourseId = null;
 
-        if (name && email) {
-            // Simulation d'envoi de données
-            setTimeout(() => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Inscription réussie !',
-                    text: 'Merci pour votre participation !',
-                    confirmButtonColor: '#28a745'
-                });
-                $('#participationModal').modal('hide');
-                document.getElementById('participationForm').reset();
-            }, 1000);
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erreur',
-                text: 'Veuillez remplir tous les champs',
-                confirmButtonColor: '#dc3545'
+        // Récupérer le modal et les boutons
+        const modal = document.getElementById('participateModal');
+        const closeBtn = document.querySelector('.close');
+        const confirmBtn = document.getElementById('confirmParticipation');
+        const cancelBtn = document.getElementById('cancelParticipation');
+
+        // Sélectionner tous les boutons "Participer" avec data-cour-id
+        const participateButtons = document.querySelectorAll('.btn-participate[data-cour-id]');
+        participateButtons.forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                selectedCourseId = btn.getAttribute('data-cour-id');
+                modal.style.display = 'block';
             });
-        }
-    }
-</script>
+        });
+
+        // Fermer le modal en cliquant sur la croix ou Annuler
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            selectedCourseId = null;
+        });
+        cancelBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            selectedCourseId = null;
+        });
+
+        // Action lors de la confirmation
+        confirmBtn.addEventListener('click', function() {
+            if (selectedCourseId) {
+                fetch(`/cour/${selectedCourseId}/inscrire`, { // Envoie uniquement l'ID du cours
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.message || 'Erreur inconnue');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message); // Affiche "Participation enregistrée avec succès"
+                    } else {
+                        alert('Une erreur est survenue: ' + data.message);
+                    }
+                    modal.style.display = 'none';
+                    selectedCourseId = null;
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue: ' + error.message);
+                    modal.style.display = 'none';
+                    selectedCourseId = null;
+                });
+            }
+        });
+
+        // Fermer le modal en cliquant en dehors du contenu
+        window.addEventListener('click', function(e) {
+            if (e.target == modal) {
+                modal.style.display = 'none';
+                selectedCourseId = null;
+            }
+        });
+    </script>
 {% endblock %}

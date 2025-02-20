@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Cour;
-use App\Entity\Client;
+use App\Entity\User;
 use App\Form\CourType;
 use App\Repository\CourRepository;
 use App\Repository\ClientRepository;
@@ -14,7 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/cour')]
-final class CourController extends AbstractController{
+final class CourController extends AbstractController
+{
     #[Route(name: 'app_cour_index', methods: ['GET'])]
     public function index(CourRepository $courRepository): Response
     {
@@ -23,7 +24,7 @@ final class CourController extends AbstractController{
         ]);
     }
 
-    #[Route('/newfront',name: 'app_cour_indexx', methods: ['GET'])]
+    #[Route('/newfront', name: 'app_cour_indexx', methods: ['GET'])]
     public function indexx(CourRepository $courRepository): Response
     {
         return $this->render('Front/indexmabase.html.twig', [
@@ -31,7 +32,6 @@ final class CourController extends AbstractController{
         ]);
     }
 
-    
     #[Route('/new', name: 'app_cour_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -61,12 +61,8 @@ final class CourController extends AbstractController{
     }
 
     #[Route('/{id}/edit', name: 'app_cour_edit', methods: ['GET', 'POST'])]
-    #[Route('/{id}/edit', name: 'app_cour_edit', methods: ['GET', 'POST'])]
-    public function edit(
-        Request $request, 
-        Cour $cour, 
-        EntityManagerInterface $entityManager
-    ): Response {
+    public function edit(Request $request, Cour $cour, EntityManagerInterface $entityManager): Response
+    {
         $form = $this->createForm(CourType::class, $cour);
         $form->handleRequest($request);
 
@@ -85,7 +81,7 @@ final class CourController extends AbstractController{
     #[Route('/{id}', name: 'app_cour_delete', methods: ['POST'])]
     public function delete(Request $request, Cour $cour, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$cour->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$cour->getId(), $request->request->get('_token'))) {
             $entityManager->remove($cour);
             $entityManager->flush();
         }
@@ -93,22 +89,21 @@ final class CourController extends AbstractController{
         return $this->redirectToRoute('app_cour_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/inscrire/{clientId}', name: 'app_cour_inscrire', methods: ['POST'])]
-    public function inscrireClient(int $id, int $clientId, CourRepository $courRepository, ClientRepository $clientRepository, EntityManagerInterface $entityManager): Response
-    {
-        $cour = $courRepository->find($id);
-        $client = $clientRepository->find($clientId);
+    #[Route('/{id}/inscrire', name: 'app_cour_inscrire', methods: ['POST'])]
+    public function inscrire(Cour $cour, EntityManagerInterface $entityManager): Response {
+        // Récupérer l'utilisateur avec ID 3
+        $user = $entityManager->getRepository(User::class)->find(3);
 
-        if (!$cour || !$client) {
-            return $this->redirectToRoute('app_cour_index');
+        if (!$user) {
+            return $this->json(['success' => false, 'message' => 'Utilisateur non trouvé.'], Response::HTTP_NOT_FOUND);
         }
 
-        if (!$client->getCours()->contains($cour)) {
-            $client->addCour($cour);
-            $entityManager->persist($client);
-            $entityManager->flush();
-        }
+        // Ajout de l'utilisateur au cours
+        $cour->addUser($user);
+        $entityManager->persist($cour);
+        $entityManager->flush();
 
-        return $this->redirectToRoute('app_cour_show', ['id' => $id]);
+        return $this->json(['success' => true, 'message' => 'Participation enregistrée avec succès.']);
     }
 }
+    
