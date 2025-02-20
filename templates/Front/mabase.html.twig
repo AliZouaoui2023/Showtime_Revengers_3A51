@@ -14,141 +14,152 @@
     <link rel="stylesheet" href="../../Front/css/style.css">
 
     <style>
-        :root {
-            --primary-color: #0088ff;
-            --dark-bg: #020d18;
-            --card-bg: rgba(29, 39, 49, 0.9);
-        }
+:root {
+    --primary-color: #0088ff;
+    --dark-bg: #020d18;
+    --card-bg: rgba(29, 39, 49, 0.9);
+}
 
-        body {
-            background: linear-gradient(rgba(2, 13, 24, 0.95), rgba(2, 13, 24, 0.95)),
-                        url("../../images/movies-pattern.jpg");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            color: white;
-            font-family: 'Nunito', sans-serif;
-            margin: 0;
-            min-height: 100vh;
-        }
+body {
+    background: linear-gradient(rgba(2, 13, 24, 0.95), rgba(2, 13, 24, 0.95)),
+                url("../../images/movies-pattern.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+}
 
-        /* Header Styles */
-        .ht-header {
-            background: rgba(2, 13, 24, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
-            top: 0;
-        }
+/* Header Styles */
+.ht-header {
+    background: rgba(2, 13, 24, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+}
 
-        .navbar-custom {
-            padding: 15px 0;
-        }
+.navbar-custom {
+    padding: 15px 0;
+}
 
-        .navbar-header .logo {
-            max-height: 40px;
-            padding: 0;
-        }
+.navbar-header .logo {
+    max-height: 40px;
+    padding: 0;
+}
 
-        .nav.navbar-nav {
-            display: flex;
-            gap: 20px;
-        }
+.nav.navbar-nav {
+    display: flex;
+    gap: 20px;
+}
 
-        .btn-default.dropdown-toggle {
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            transition: all 0.3s ease;
-        }
+.btn-default.dropdown-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    transition: all 0.3s ease;
+}
 
-        .btn-default.dropdown-toggle:hover {
-            color: var(--primary-color);
-        }
+.btn-default.dropdown-toggle:hover {
+    color: var(--primary-color);
+}
 
-        /* Main Content Styles */
-        .main-content {
-            margin-top: 100px;
-            padding: 30px 0;
-        }
+/* Main Content Styles */
+.main-content {
+    margin-top: 100px;
+    padding: 30px 0;
+}
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
+.card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
 
-        .card-header {
-            background: var(--primary-color);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+.card-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
 
-        .card-header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
-        }
+.card-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
 
-        .card-body {
-            padding: 30px;
-        }
+.card-body {
+    padding: 30px;
+}
 
-        /* Form Styles */
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+/* Form Styles */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+.form-group {
+    margin-bottom: 20px;
+}
 
-        .form-label {
-            color: #fff;
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
+.form-label {
+    color: #fff;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
 
-        .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            color: white;
-            padding: 12px;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
+/* Styles pour les champs de formulaire */
+.form-control {
+    background: transparent !important; /* Fond transparent */
+    border: 1px solid white !important; /* Bordure blanche */
+    color: white !important; /* Texte blanc */
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    transition: none !important;
+}
 
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(0, 136, 255, 0.2);
-            outline: none;
-        }
+/* Supprimer l'effet de focus */
+.form-control:focus {
+    background: transparent !important;
+    border: 1px solid white !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
 
-        /* Button Styles */
-        .btn-primary {
-            background: var(--primary-color);
-            border: none;
-            border-radius: 4px;
-            color: white;
-            padding: 12px 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
+/* Appliquer les mêmes styles au textarea */
+textarea.form-control {
+    background: transparent !important;
+    color: white !important;
+    border: 1px solid white !important;
+}
 
-        .btn-primary:hover {
-            background: #0066cc;
-            transform: translateY(-1px);
-        }
+/* Button Styles */
+.btn-primary {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #0066cc;
+    transform: translateY(-1px);
+}
+
+
     </style>
 </head>
 
@@ -185,7 +196,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h1>Edit Demande</h1>
+                <h1>Ajoutez Demande</h1>
             </div>
             <div class="card-body">
                 <div class="form-container">
