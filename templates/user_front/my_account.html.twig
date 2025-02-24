@@ -86,6 +86,10 @@
         </div>
 
         <a href="{{ path('frontend_user_edit', {'id': user.id}) }}">Edit</a>
+        <form action="{{ path('app_logout') }}" method="post">
+    <button type="submit" class="btn btn-danger">Logout</button>
+    {{ csrf_token('logout') }}
+</form>
 
     </div>
 {% endblock %}

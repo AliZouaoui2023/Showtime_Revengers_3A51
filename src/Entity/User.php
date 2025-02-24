@@ -18,7 +18,7 @@ class User
 
     #[ORM\Column(length: 255)]
     #[Assert\Regex(
-        pattern: "/^[A-Za-zÀ-ÿéèêôîçïù]+$/",
+        pattern: "/^[A-Za-zÀ-ÿéèêôîçïù\s]+$/",
         message: "Le nom ne doit contenir que des lettres (sans chiffres)."
     )]
     private ?string $Nom = null;

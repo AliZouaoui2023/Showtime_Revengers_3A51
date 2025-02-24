@@ -154,11 +154,15 @@ public function login(Request $request, RequestStack $requestStack): Response
 }
 
 
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(): void
-    {
-        // Symfony handles the logout automatically, so no logic needed here
-    }
+#[Route('/logout', name: 'app_logout')]
+public function logout(RequestStack $requestStack): void
+{
+    $session = $requestStack->getSession();
+    $session->invalidate(); // Clear session data
+
+    throw new \Exception('This should never be reached! Symfony handles logout automatically.');
+}
+
 
     #[Route('/my-account', name: 'app_user_account')]
     public function account(Request $request, EntityManagerInterface $entityManager, RequestStack $requestStack): Response
