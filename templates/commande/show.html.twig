@@ -1,0 +1,44 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Détails du Commande{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Détails de la Commande</h1>
+
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th scope="row">ID</th>
+                    <td>{{ commande.id }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Date de Commande</th>
+                    <td>{{ commande.datecommande ? commande.datecommande|date('Y-m-d H:i:s') : 'Non définie' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Montant Payé</th>
+                    <td>{{ commande.montantpaye }} TND</td>
+                </tr>
+                <tr>
+                    <th scope="row">État</th>
+                    <td>
+                        {% if commande.etat == 'En attente' %}
+                            <span class="badge bg-warning text-dark">En attente</span>
+                        {% elseif commande.etat == 'Payée' %}
+                            <span class="badge bg-success">Payée</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ commande.etat }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_commande_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            <a href="{{ path('app_commande_edit', {'id': commande.id}) }}" class="btn btn-primary">Modifier</a>
+            {{ include('commande/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

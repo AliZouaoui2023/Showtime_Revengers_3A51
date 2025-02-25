@@ -4,7 +4,9 @@
 
 {% block body %}
     <h1>User index</h1>
-
+<a href="{{ path('app_user_account') }}">
+            <button type="button">Go to your Account</button>
+        </a>
     <table class="table">
         <thead>
             <tr>
@@ -29,7 +31,7 @@
                 <td>{{ user.motDePasse }}</td>
                 <td>
                     {% if user.photo %}
-                        <img src="{{ asset('Back/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto;">
+                        <img src="{{ asset('uploads/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto;">
                     {% else %}
                         <span>No photo</span>
                     {% endif %}

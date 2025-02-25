@@ -1,0 +1,52 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center text-primary fw-bold mb-4">🛒 Mes Commandes</h1>
+
+        {% if commandes is empty %}
+            <div class="alert alert-warning text-center shadow-sm p-3 rounded">
+                <p class="mb-0">Aucune commande passée.</p>
+            </div>
+        {% else %}
+            <div class="card shadow-lg p-4 border-0 rounded-4">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle bg-light">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Montant Payé</th>
+                                <th>Produits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for commande in commandes %}
+                                <tr class="text-center">
+                                    <td class="fw-bold text-primary">{{ commande.id }}</td>
+                                    <td class="text-muted">{{ commande.dateCommande|date("d/m/Y H:i") }}</td>
+                                    <td class="fw-bold text-success">{{ commande.montantpaye|number_format(2, '.', ',') }} TND</td>
+                                    <td>
+                                        <ul class="list-unstyled text-start">
+                                            {% for produit in commande.produits %}
+                                                <li class="p-2 bg-white shadow-sm rounded mb-2">✔️ {{ produit.nom }} - <strong class="text-dark">{{ produit.prix|number_format(2, '.', ',') }} TND</strong></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mt-4 text-center">
+            <a href="{{ path('app_produit_list') }}" class="btn btn-outline-primary btn-lg px-4 py-2 rounded-pill shadow-sm">
+                <i class=""></i>↩Retour aux produits
+            </a>
+        </div>
+    </div>
+{% endblock %}

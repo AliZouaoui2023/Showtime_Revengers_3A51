@@ -44,7 +44,7 @@ final class UserController extends AbstractController
                 try {
                     // Move the file to the directory where user photos are stored
                     $photoFile->move(
-                        $this->getParameter('uploads_directory'), // Ensure this parameter is set in services.yaml
+                        $this->getParameter('images_directory'), // Ensure this parameter is set in services.yaml
                         $newFilename
                     );
                     
@@ -95,7 +95,7 @@ final class UserController extends AbstractController
                 try {
                     // Move the file to the directory where user photos are stored
                     $photoFile->move(
-                        $this->getParameter('uploads_directory'), // Ensure this parameter is set in services.yaml
+                        $this->getParameter('images_directory'), // Ensure this parameter is set in services.yaml
                         $newFilename
                     );
                     

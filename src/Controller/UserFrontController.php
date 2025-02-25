@@ -67,7 +67,7 @@ final class UserFrontController extends AbstractController
                 // Move the file to the directory where brochures are stored
                 try {
                     $photoFile->move(
-                        $this->getParameter('uploads_directory'), // Ensure this parameter is defined in config/services.yaml
+                        $this->getParameter('images_directory'), // Ensure this parameter is defined in config/services.yaml
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -205,7 +205,7 @@ public function editUser(Request $request, User $user, EntityManagerInterface $e
             try {
                 // Move the file to the directory where user photos are stored
                 $photoFile->move(
-                    $this->getParameter('uploads_directory'),
+                    $this->getParameter('images_directory'),
                     $newFilename
                 );
 

@@ -76,7 +76,7 @@
         <div class="account-details">
                     <!-- Display the user's photo -->
             {% if user.photo %}
-                <img src="{{ asset('Back/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto;" class="profile-photo" />
+                <img src="{{ asset('uploads/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto;" class="profile-photo" />
             {% else %}
                 <p>No photo available</p>
             {% endif %}

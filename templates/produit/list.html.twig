@@ -1,0 +1,49 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Produits{% endblock %}
+
+{% block body %}
+    {# Affichage des messages flash #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    <div class="container mt-4">
+        <h1 class="card-title mb-3">Produits</h1>
+        
+        <div class="slick-multiItemSlider">
+            {% for produit in produits %}
+                <div class="movie-item">
+                    <div class="mv-img">
+                        <a href="{{ path('app_produit_show', {'id': produit.id}) }}">
+                            <img src="{{ asset('uploads/images/' ~ produit.image) }}" alt="{{ produit.nom }}" width="285" height="437">
+                        </a>
+                    </div>
+                    <div class="title-in">
+                        <div class="cate">
+                            <span class="blue"><a href="#">{{ produit.categorie }}</a></span>
+                        </div>
+                        <h6><a href="{{ path('app_produit_shows', {'id': produit.id}) }}">{{ produit.nom }}</a></h6>
+                        <p><i class="ion-android-star"></i><span>{{ produit.prix|number_format(2, '.', ',') }}🏷️TND</span></p>
+                    </div>
+                    <div class="actions">
+                        <a href="{{ path('commander', {'id': produit.id}) }}" class="btn btn-sm btn-success">🛒Commander</a>
+                        <a href="{{ path('app_produit_shows', {'id': produit.id}) }}" class="btn btn-sm btn-info">👁️Afficher</a>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center text-muted">Aucun produit trouvé.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{{ path('app_commande_list') }}" class="btn btn-sm btn-info">🔍voir</a>
+{% endblock %}
