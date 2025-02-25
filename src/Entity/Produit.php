@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -17,21 +18,43 @@ class Produit
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom du produit est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le nom ne doit pas dépasser 255 caractères."
+    )]
     private ?string $nom = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Le prix est obligatoire.")]
+    #[Assert\Type(type: 'float', message: "Le prix doit être un nombre valide.")]
+    #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
     private ?float $prix = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La catégorie est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "La catégorie ne doit pas dépasser 255 caractères."
+    )]
     private ?string $categorie = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "La description ne doit pas dépasser 255 caractères."
+    )]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $image = null; 
+    #[Assert\NotBlank(message: "L'image est obligatoire.")]
+    #[Assert\Url(message: "L'URL de l'image doit être valide.")]
+    private ?string $image = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull(message: "La date est obligatoire.")]
+    #[Assert\Type(type: '\DateTimeInterface', message: "La date est invalide.")]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToMany(targetEntity: Commande::class, inversedBy: 'produits')]
