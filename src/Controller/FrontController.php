@@ -15,4 +15,12 @@ final class FrontController extends AbstractController
             'controller_name' => 'FrontController',
         ]);
     }
+
+    #[Route('/frontt', name: 'app_frontt')]
+    public function indext(): Response
+    {
+        return $this->render('Front/mabase.html.twig', [
+            'controller_name' => 'FrontController',
+        ]);
+    }
 }

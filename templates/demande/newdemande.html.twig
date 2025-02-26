@@ -1,0 +1,66 @@
+{% extends 'Front/mabase.html.twig' %}
+
+{% block title %}New Demande{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <br><br>   <br><br>   <br><br>   <br><br> <br><br>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white rounded-top">
+                        <h1 class="h4 mb-0 text-center">Create New Demande</h1>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="mb-4 text-center">Fill the form to create a new request</h5>
+                        <div class="form-container">
+                            {{ form_start(form) }}
+                                {% for field in form %}
+                                    {% if field.vars.name != '_token' and field.vars.name != 'submit' and field.vars.name != 'user' and field.vars.name != 'admin' %}
+                                        <div class="mb-3">
+                                            <label for="{{ field.vars.id }}" class="form-label">{{ form_label(field) }}</label>
+                                            {{ form_widget(field, {'attr': {'class': 'form-control p-3'} }) }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success btn-lg px-5">{{ button_label|default('Save') }}</button>
+                                </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-center rounded-bottom bg-warning">
+                        <a href="{{ path('app_front_home') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Définir les ID fixes pour user (3) et admin (1) avant l'envoi du formulaire
+        document.addEventListener('DOMContentLoaded', function() {
+            var userField = document.querySelector('input[name="demande[user]"]');
+            var adminField = document.querySelector('input[name="demande[admin]"]');
+            
+            // Vérifier si les champs existent et injecter les valeurs
+            if (userField) {
+                userField.value = 3; // ID utilisateur fixe
+                userField.type = 'hidden'; // Cacher le champ dans le formulaire
+            }
+            if (adminField) {
+                adminField.value = 1; // ID administrateur fixe
+                adminField.type = 'hidden'; // Cacher le champ dans le formulaire
+            }
+        });
+    </script>
+{% endblock %}
+

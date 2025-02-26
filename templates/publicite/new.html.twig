@@ -1,0 +1,197 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Create New Publicite{% endblock %}
+
+{% block body %}
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-gradient text-white rounded-top">
+                        <h1 class="h4 mb-0 text-center fw-bold">Create New Advertisement</h1>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="mb-4 text-muted fw-normal">Please fill in the form below to create a new advertisement</h5>
+                        <div class="table-responsive">
+                            <form method="post">
+                                <table class="table table-form">
+                                    <tbody>
+                                        {{ form_start(form) }}
+                                        {% for field in form %}
+                                            {% if field.vars.name != '_token' %}
+                                                <tr>
+                                                    <th class="align-middle">{{ form_label(field) }}</th>
+                                                    <td>{{ form_widget(field) }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <tr>
+                                            <td colspan="2" class="text-center border-0 pt-4">
+                                                <button class="btn btn-primary">{{ button_label|default('Create') }}</button>
+                                            </td>
+                                        </tr>
+                                        {{ form_end(form) }}
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-light text-center rounded-bottom">
+                        <a href="{{ path('app_publicite_index') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3049d1;
+            --bg-light: #f8fafc;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1140px;
+        }
+
+        .card {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            border-bottom: none;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            padding: 1.5rem;
+        }
+
+        .card-header h1 {
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .card-body {
+            padding: 2.5rem;
+            background-color: var(--bg-light);
+        }
+
+        .card-footer {
+            background-color: white;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Table Form Styling */
+        .table-form {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 0;
+        }
+
+        .table-form th {
+            width: 30%;
+            padding: 1.5rem;
+            background-color: rgba(67, 97, 238, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+            color: #444;
+        }
+
+        .table-form td {
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: var(--transition);
+            background-color: #e8f0fe !important;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+            background-color: #d3e3fd !important;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .text-muted {
+            color: #6b7280 !important;
+        }
+
+        @media (max-width: 767px) {
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .table-form th,
+            .table-form td {
+                padding: 1rem;
+            }
+
+            .table-form th {
+                width: 40%;
+            }
+        }
+    </style>
+{% endblock %}

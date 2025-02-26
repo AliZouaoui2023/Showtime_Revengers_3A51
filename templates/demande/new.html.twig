@@ -1,0 +1,134 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}New Demande{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white rounded-top">
+                        <h1 class="h4 mb-0 text-center">Create New Demande</h1>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="mb-4 text-center">Fill the form to create a new request</h5>
+                        <div class="table-responsive">
+                            <table class="table table-form">
+                                {{ form_start(form) }}
+                                <tbody>
+                                    {% for field in form %}
+                                        {% if field.vars.name != '_token' and field.vars.name != 'submit' %}
+                                            <tr>
+                                                <th class="align-middle p-3">{{ form_label(field) }}</th>
+                                                <td class="p-3">{{ form_widget(field, {'attr': {'class': 'form-control p-3'} }) }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="2" class="text-center p-4">
+                                            <button class="btn btn-success btn-lg px-5">{{ button_label|default('Save') }}</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                {{ form_end(form) }}
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-center rounded-bottom bg-warning">
+                        <a href="{{ path('app_demande_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Styles communs */
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            background: #007bff;
+            border-bottom: 2px solid #0056b3;
+            padding: 1.5rem;
+        }
+
+        .table-form {
+            background: white;
+            border-radius: 8px;
+        }
+
+        .table-form th {
+            background-color: #f8f9fa;
+            width: 30%;
+            padding: 1.25rem;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table-form td {
+            padding: 1.25rem;
+            vertical-align: middle;
+        }
+
+        /* Bouton Save */
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        /* Champs de formulaire */
+        .form-control {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Responsive */
+        @media (max-width: 767px) {
+            .table-form th,
+            .table-form td {
+                display: block;
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .table-form th {
+                background-color: transparent;
+                border-bottom: none;
+                padding-bottom: 0.5rem;
+            }
+
+            .table-form td {
+                padding-top: 0.5rem;
+                padding-bottom: 1.5rem;
+            }
+
+            .btn-success {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+{% endblock %}

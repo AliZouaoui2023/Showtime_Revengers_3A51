@@ -1,0 +1,177 @@
+{% extends 'Front/support.html.twig' %}
+
+{% block title %}Listes des Demandes{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid px-4">
+ <div class="card shadow mb-4 border-0 rounded-3 overflow-hidden">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background-color: #007bff;">
+        <h4 class="card-title mb-0 text-white">Liste des Demandes</h4>
+    </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-bordered shadow-sm rounded" style="font-size: 1.2rem;">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Statut</th>
+                            <th>Date Soumission</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for demande in demandes %}
+                        <tr>
+                            <td class="text-truncate description-cell" style="max-width: 250px;">
+                                {{ demande.description }}
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary text-white">{{ demande.type }}</span>
+                            </td>
+                            <td>
+                                {% set statusClass = {
+                                    'en_attente': 'bg-warning text-dark',
+                                    'approuvee': 'bg-success',
+                                    'rejete': 'bg-danger'
+                                } %}
+                                <span class="badge {{ statusClass[demande.statut] ?? 'bg-secondary' }}">
+                                    {{ demande.statut|capitalize }}
+                                </span>
+                            </td>
+                            <td>{{ demande.dateSoumission ? demande.dateSoumission|date('d/m/Y') : 'Non spécifiée' }}</td>
+                            <td style="text-align: center; width: 250px;">
+                                <div style="display: inline-flex; flex-direction: row; gap: 10px; justify-content: center;">
+                                    <form action="{{ path('app_demande_delete', {'id': demande.id}) }}" 
+                                          method="post" style="display: inline-block;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ demande.id) }}">
+                                        <button type="submit" 
+                                                class="btn btn-danger btn-lg"
+                                                style="width: 150px;"
+                                                title="Supprimer"
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')">
+                                            <i class="fas fa-trash-alt me-1"></i>
+                                            <span>Supprimer</span>
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <div class="alert alert-info mb-0 shadow-sm rounded">
+                                    <i class="fas fa-info-circle me-2"></i>Aucune demande trouvée
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block stylesheets %}
+    <style>
+      /* Suppression de tous les effets de focus */
+*:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Suppression de l'effet de survol sur la ligne et du curseur */
+.table-hover tbody tr:hover {
+    background-color: transparent !important; /* Pas de changement de fond */
+    cursor: default !important; /* Restaure le curseur par défaut */
+}
+
+/* Styles généraux du tableau */
+.table th {
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    padding: 1.2rem;
+}
+
+/* Gestion du texte tronqué */
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+}
+
+/* Styles des boutons */
+.btn-lg {
+    padding: 14px 24px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    border-width: 2px;
+}
+
+.btn-warning {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #000;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800 !important;
+    border-color: #d39e00 !important;
+}
+
+.btn-danger {
+    background-color: #ff4d4d !important;
+    border-color: #ff4d4d !important;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #cc0000 !important;
+    border-color: #b30000 !important;
+}
+
+/* Styles spécifiques */
+.text-white {
+    color: #fff !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.bg-gradient-dark {
+    background: linear-gradient(90deg, #343a40, #212529);
+}
+
+.d-flex.gap-2 {
+    gap: 10px !important;
+}
+
+/* Alignement des éléments */
+td .btn {
+    display: inline-block !important;
+    margin: 0 5px !important;
+    width: 150px !important;
+    vertical-align: middle;
+}
+
+form {
+    display: inline-block !important;
+    margin: 0;
+}
+
+/* Style de l'alerte vide */
+.alert-info {
+    border-left: 4px solid #17a2b8;
+    background-color: #f8f9fa;
+}
+
+    </style>
+{% endblock %}
+
+{% endblock %}

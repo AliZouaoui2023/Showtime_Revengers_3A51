@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+    <title>Open Pediatrics</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Google Font -->
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
+    
+    <!-- CSS files -->
+    <link rel="stylesheet" href="../../Front/css/plugins.css">
+    <link rel="stylesheet" href="../../Front/css/style.css">
+
+    <style>
+    .form-select {
+    background: transparent !important; /* Fond transparent */
+    border: 1px solid white !important; /* Bordure blanche */
+    color: white !important; /* Texte blanc */
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    appearance: none; /* Supprime le style natif du navigateur */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Supprimer l'effet de focus */
+.form-select:focus {
+    background: transparent !important;
+    border: 1px solid white !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+:root {
+    --primary-color: #0088ff;
+    --dark-bg: #020d18;
+    --card-bg: rgba(29, 39, 49, 0.9);
+}
+
+body {
+    background: linear-gradient(rgba(2, 13, 24, 0.95), rgba(2, 13, 24, 0.95)),
+                url("../../images/movies-pattern.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Header Styles */
+.ht-header {
+    background: rgba(2, 13, 24, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+}
+
+.navbar-custom {
+    padding: 15px 0;
+}
+
+.navbar-header .logo {
+    max-height: 40px;
+    padding: 0;
+}
+
+.nav.navbar-nav {
+    display: flex;
+    gap: 20px;
+}
+
+.btn-default.dropdown-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-default.dropdown-toggle:hover {
+    color: var(--primary-color);
+}
+
+/* Main Content Styles */
+.main-content {
+    margin-top: 100px;
+    padding: 30px 0;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.card-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.card-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/* Form Styles */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    color: #fff;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Styles pour les champs de formulaire */
+.form-control {
+    background: transparent !important; /* Fond transparent */
+    border: 1px solid white !important; /* Bordure blanche */
+    color: white !important; /* Texte blanc */
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    transition: none !important;
+}
+
+/* Supprimer l'effet de focus */
+.form-control:focus {
+    background: transparent !important;
+    border: 1px solid white !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Appliquer les mêmes styles au textarea */
+textarea.form-control {
+    background: transparent !important;
+    color: white !important;
+    border: 1px solid white !important;
+}
+
+/* Button Styles */
+.btn-primary {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #0066cc;
+    transform: translateY(-1px);
+}
+
+
+    </style>
+</head>
+
+<body>
+    <header class="ht-header">
+        <div class="container">
+            <nav class="navbar navbar-default navbar-custom">
+                <div class="navbar-header logo">
+                    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <div id="nav-icon1">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <a href="index.html">
+                        <img class="logo" src="../../Front/images/show.png" alt="Logo">
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav flex-child-menu menu-left">
+                        <li><a href="#" class="btn btn-default">DEMANDE</a></li>
+                         <li><a href="{{ path('app_demande_indexx') }}" class="btn btn-default">VOTRE LISTE DES DEMANDES</a></li>
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+<div class="main-content">
+<br></br><br></br>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>Ajoutez Demande</h1>
+            </div>
+            <div class="card-body">
+                <div class="form-container">
+                    {{ form_start(form) }}
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Nbr jours</label>
+                        {{ form_widget(form.nbrJours, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Description</label>
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Type</label>
+                        {{ form_widget(form.type, {
+                            'attr': {'class': 'form-select'},
+                            'choices': {
+                                'Sélectionner un type': '',
+                                'Footer Web': 'footerWeb',
+                                'Intégrer Film': 'integrefilm',
+                                'Backdrop': 'backdrop'
+                            },
+                            'required': true
+                        }) }}
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Lien supp</label>
+                        {{ form_widget(form.lienSupp, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    
+                    {# Champ statut caché avec valeur par défaut en_attente #}
+                    {{ form_widget(form.statut, {
+                        'attr': {'style': 'display: none'},
+                        'value': 'en_attente'
+                    }) }}
+                    
+                    {# Champs cachés avec valeurs par défaut #}
+                    {{ form_widget(form.dateSoumission, {
+                        'attr': {'style': 'display: none'},
+                        'value': "now"|date("Y-m-d H:i:s")
+                    }) }}
+
+                    {{ form_widget(form.user, {
+                        'attr': {'style': 'display: none'},
+                        'value': 3
+                    }) }}
+
+                    {{ form_widget(form.admin, {
+                        'attr': {'style': 'display: none'},
+                        'value': 1
+                    }) }}
+                    
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                    
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Votre footer original -->
+    <footer class="ht-footer">
+    
+        <div class="container">
+            <div class="flex-parent-ft">
+                <div class="flex-child-ft item1">
+                    <a href="index-2.html"><img class="logo" src="../../Front/images/show.png" alt=""></a>
+                    <p>5th Avenue st, manhattan<br>
+                    New York, NY 10001</p>
+                    <p>Call us: <a href="#">(+01) 202 342 6789</a></p>
+                </div>
+                <div class="flex-child-ft item2">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">About</a></li> 
+                        <li><a href="#">Blockbuster</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Forums</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item3">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Use</a></li> 
+                        <li><a href="#">Privacy Policy</a></li>    
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item4">
+                    <h4>Account</h4>
+                    <ul>
+                        <li><a href="#">My Account</a></li> 
+                        <li><a href="#">Watchlist</a></li>    
+                        <li><a href="#">Collections</a></li>
+                        <li><a href="#">User Guide</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item5">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to our newsletter system now <br> to get latest news from us.</p>
+                    <form action="#">
+                        <input type="text" placeholder="Enter your email...">
+                    </form>
+                    <a href="#" class="btn">Subscribe now <i class="ion-ios-arrow-forward"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="ft-copyright">
+            <div class="ft-left">
+                <p><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../../Front/js/jquery.js"></script>
+    <script src="../../Front/js/plugins.js"></script>
+    <script src="../../Front/js/custom.js"></script>
+</body>
+</html>
