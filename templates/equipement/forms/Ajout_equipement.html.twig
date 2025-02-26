@@ -1,0 +1,74 @@
+
+{%extends 'Back/base.html.twig'%}
+{% block title %}Ajouter un équipement{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center align-items-center height=30px min-vh-100"> {# Centrage vertical et horizontal #}
+            <div class="col-md-6 grid-margin stretch-card ">
+                <div class="card">
+                    <div class="card-body min-vh-2">
+                        {# Centrage du titre avec la classe d-flex et justify-content-center #}
+                        <div class="d-flex justify-content-center">
+                            <h4 class="text-center mt-5 mb-4  fs-3">Ajouter un équipement</h4>
+                        </div>
+                       
+
+                        {# Afficher les messages flash (s'il y en a) #}
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        {# Début du formulaire #}
+                        {{ form_start(form) }}
+                            {# Champ Nom #}
+                           <div class="form-group mb-3">
+    {{ form_label(form.nom, 'Nom de l\'équipement', { 'label_attr': {'class': 'form-label'} }) }}
+    {{ form_widget(form.nom, { 'attr': {'class': 'form-control w-100', 'placeholder': 'Entrez le nom de l\'équipement'} }) }}
+    {% if form.nom.vars.errors|length > 0 %}
+        <div class="text-danger">
+            {% for error in form.nom.vars.errors %}
+                <p>{{ error.message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+
+                                
+                            {# Champ Type #}
+                            <div class="form-group">
+                                {{ form_label(form.type, 'Type', { 'label_attr': {'class': 'form-label'} }) }}
+                                {{ form_widget(form.type, { 'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez un type'} }) }}
+                                {{ form_errors(form.type) }}
+                            </div>
+
+                            {# Champ État #}
+                            <div class="form-group">
+                                {{ form_label(form.etat, 'État', { 'label_attr': {'class': 'form-label'} }) }}
+                                {{ form_widget(form.etat, { 'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez l\'état'} }) }}
+                                {{ form_errors(form.etat) }}
+                            </div>
+                            {# Champ Salle après les boutons #}
+    <div class="form-group mt-3">
+        {{ form_label(form.salle, 'Salle', { 'label_attr': {'class': 'form-label'} }) }}
+        {{ form_widget(form.salle, { 'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez une salle'} }) }}
+        {{ form_errors(form.salle) }}
+    </div>
+
+                            
+                          
+                               
+                                
+                            <button type="submit" class="btn btn-primary btn-lg w-48">Ajouter</button>
+                            <button type="button" class="btn btn-dark btn-lg w-48" onclick="window.location.href='{{ path('table_des_equipements') }}'">Annuler</button>
+                     
+                           
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

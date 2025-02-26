@@ -1,0 +1,105 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Gestion des équipements{% endblock %}
+
+{% block body %}
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card p-4 w-75 custom-bg">
+            
+            {# En-tête avec les boutons Retour, Ajouter un équipement et Gérer les salles #}
+            <div class="row mb-4">
+                <div class="col d-flex justify-content-start">
+                    <a href="{{ path('index') }}" class="btn custom-btn-return">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                </div>
+                <div class="col d-flex flex-column align-items-end gap-2">
+                    <a href="{{ path('equipement_add') }}" class="btn custom-btn-return">
+                        <i class="fas fa-plus"></i> Ajouter un équipement
+                    </a>
+                    <a href="{{ path('app_salle_index') }}" class="btn custom-btn-return">
+                        <i class="fas fa-cogs"></i> Gérer les salles
+                    </a>
+                </div>
+            </div>
+
+            <h4 class="text-center mb-4 custom-text">Table des équipements</h4>
+            
+            {# Formulaire de recherche #}
+
+    
+</form>
+
+            <div class="table-responsive">
+                <table class="table custom-table text-center">
+                    <thead class="custom-thead">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Type</th>
+                            <th>État</th>
+                            <th>Salle</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for equipement in equipements %}
+                            <tr>
+                                <td>{{ equipement.id }}</td>
+                                <td>{{ equipement.nom }}</td>
+                                <td>{{ equipement.type }}</td>
+                                <td>{{ equipement.etat }}</td>
+                                <td>{{ equipement.salle.idSalle }}</td>
+                                <td>
+                                    <a href="{{ path('equipement_edit', {'id': equipement.id}) }}" 
+                                       class="btn btn-light btn-sm px-4 shadow-sm" 
+                                       style="border-radius: 20px; border: 2px solid black; transition: 0.3s ease-in-out;">
+                                        Modifier
+                                    </a>
+
+                                    <!-- Bouton Supprimer qui déclenche le Modal -->
+                                    <button type="button" 
+                                            class="btn btn-outline-light border-white px-4 shadow-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#confirmDeleteModal{{ equipement.id }}"
+                                            style="border-radius: 20px; transition: 0.3s ease-in-out;">
+                                        Supprimer
+                                    </button>
+                                </td>
+                            </tr>
+
+                            {# Modal de confirmation de suppression #}
+                            <div class="modal fade" id="confirmDeleteModal{{ equipement.id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ equipement.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="confirmDeleteModalLabel{{ equipement.id }}">Confirmation de suppression</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Êtes-vous sûr de vouloir supprimer cet équipement ?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            <form action="{{ path('equipement_delete', {'id': equipement.id}) }}" method="POST" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger">Confirmer</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center custom-text">Aucun équipement trouvé.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% block javascript %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% endblock %}
+{% endblock %}

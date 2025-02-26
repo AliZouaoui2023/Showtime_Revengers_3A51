@@ -1,0 +1,91 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Modifier un équipement{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center align-items-center min-vh-100"> {# Centrage vertical et horizontal #}
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body   min-vh-5">
+                        {# Centrage du titre avec la classe d-flex et justify-content-center #}
+                        <div class="d-flex justify-content-center">
+                            <h4 class="text-center mt-5 mb-4  fs-3">Modifier l'équipement : {{ equipement.nom }}</h4>
+                        </div>
+                       
+                        {# Afficher les messages flash (s'il y en a) #}
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        {# Début du formulaire #}
+                        {{ form_start(form) }}
+                            {# Champ Nom #}
+                            <div class="form-group">
+                                {{ form_label(form.nom, 'Nom de l\'équipement', { 'label_attr': {'class': 'form-label'} }) }}
+                                {{ form_widget(form.nom, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom'} }) }}
+                                {{ form_errors(form.nom) }}
+                            </div>
+
+                            {# Champ Type #}
+                            <div class="form-group">
+                                {{ form_label(form.type, 'Type', { 'label_attr': {'class': 'form-label'} }) }}
+                                {{ form_widget(form.type, { 'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez un type'} }) }}
+                                {{ form_errors(form.type) }}
+                            </div>
+
+                            {# Champ État #}
+                            <div class="form-group">
+                                {{ form_label(form.etat, 'État', { 'label_attr': {'class': 'form-label'} }) }}
+                                {{ form_widget(form.etat, { 'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez l\'état'} }) }}
+                                {{ form_errors(form.etat) }}
+                            </div>
+
+                            {# Champ Salle #}
+                            <div class="form-group mt-3">
+                                {{ form_label(form.salle, 'Salle', { 'label_attr': {'class': 'form-label'} }) }}
+                                {{ form_widget(form.salle, { 'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez une salle'} }) }}
+                                {{ form_errors(form.salle) }}
+                            </div>
+
+                            {# Boutons de soumission #}
+                       
+                                <button type="submit" class="btn btn-primary me-2">Mettre à jour</button>
+                                <button type="button" class="btn btn-dark" onclick="window.location.href='{{ path('table_des_equipements') }}'">Annuler</button>
+                     
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Vérifie s'il y a un message flash de succès
+        {% if app.flashes('success') %}
+            document.addEventListener('DOMContentLoaded', function () {
+                // Récupère le message flash
+                const message = "{{ app.flashes('success')[0] }}";
+                
+                // Injecte le message dans la modal
+                const modalBody = document.getElementById('confirmationModalBody');
+                modalBody.textContent = message;
+
+                // Affiche la modal
+                const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+                modal.show();
+            });
+        {% endif %}
+    </script>
+{% endblock %}

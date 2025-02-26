@@ -1,0 +1,106 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Gestion des salles{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.6/dist/sweetalert2.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+   <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card p-4 w-80 custom-bg">
+            
+            {# En-tête avec les boutons Retour et Créer une nouvelle salle #}
+            <div class="d-flex justify-content-between mb-90">
+                <a href="{{ path('table_des_equipements') }}" class="btn custom-btn-return">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+                <a href="{{ path('app_salle_new') }}" class="btn custom-btn-return">
+                    <i class="fas fa-plus"></i> Créer une nouvelle salle
+                </a>
+            </div>
+
+            <h4 class="text-center mb-4 custom-text">Table des salles</h4>
+            
+            <div class="table-responsive">
+                <table class="table custom-table text-center mx-auto" style="max-width: 90%;">
+                    <thead class="custom-thead">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nom de la salle</th>
+                            <th>Disponibilité</th>
+                            <th>Type de la salle</th>
+                            <th>Statut</th>
+                            <th>Emplacement</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for salle in salles %}
+                            <tr>
+                                <td>{{ salle.idSalle }}</td>
+                                <td>{{ salle.nomSalle }}</td>
+                                <td>{{ salle.disponibilite }}</td>
+                                <td>{{ salle.typeSalle }}</td>
+                                <td>{{ salle.statut }}</td>
+                                <td>{{ salle.emplacement }}</td>
+                               <td>
+  <a href="{{ path('app_salle_edit', {'id': salle.idSalle}) }}" 
+   class="btn btn-light btn-sm px-4 shadow-sm" 
+   style="border-radius: 20px; border: 2px solid black; transition: 0.3s ease-in-out;">
+    Modifier
+</a>
+
+
+    <!-- Bouton Supprimer qui déclenche le Modal -->
+    <button type="button" 
+            class="btn btn-outline-light  border-white px-4 shadow-sm" 
+            data-bs-toggle="modal" 
+            data-bs-target="#confirmDeleteModal{{ salle.idSalle }}"
+            style="border-radius: 20px; transition: 0.3s ease-in-out;">
+        Supprimer
+    </button>
+</td>
+
+
+                            </tr>
+
+                           <div class="modal fade" id="confirmDeleteModal{{ salle.idSalle }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ salle.idSalle }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="margin-top: 2%;"> <!-- Décalage vers le haut avec un style inline -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel{{ salle.idSalle }}">Confirmation de suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer cette salle ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form action="{{ path('app_salle_delete', {'id': salle.idSalle}) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Confirmer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center custom-text">Aucune salle trouvée.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{%block javascript%}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+{% endblock %}

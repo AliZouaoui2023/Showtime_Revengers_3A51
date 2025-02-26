@@ -1,0 +1,79 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Statistiques des équipements{% endblock %}
+{% block stylesheet %}
+<style>
+    .card-title {
+        color: #000; /* Assure-toi que la couleur est visible */
+        font-size: 1.25rem;
+        font-weight: bold;
+        top-margin:10px
+    }
+</style>
+{% endblock %}
+{% block body %}
+    <div class="container d-flex flex-column  mt-5 mb-9 fw-bold justify-content-center align-items-center vh-100">
+        <h2 class="text-center mb-4">Statistiques des équipements</h2>
+
+        <div class="row w-100 d-flex justify-content-center">
+            <!-- Graphique Doughnut - Répartition des équipements par état -->
+            <div class="col-md-5 grid-margin stretch-card d-flex justify-content-center mb-4">
+                <div class="card w-100">
+                    <div class="card-body text-center">
+                        <h4 class="card-title">Répartition des équipements selon leur état</h4>
+                        <div class="d-flex justify-content-center">
+                            <canvas id="doughnutChart" style="height:250px"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphique Pie - Répartition des équipements par état -->
+            <div class="col-md-5 grid-margin stretch-card d-flex justify-content-center mb-4">
+                <div class="card w-100">
+                    <div class="card-body text-center">
+                        <h4 class="card-title">Répartition des équipements (Vue Pie)</h4>
+                        <div class="d-flex justify-content-center">
+                            <canvas id="pieChart" style="height:250px"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block javascript %}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Données des équipements
+                const equipementsData = {
+                    enService: {{ equipements_en_service|default(0) }},
+                    horsService: {{ equipements_hors_service|default(0) }},
+                    endommage: {{ equipements_endommage|default(0) }}
+                };
+
+                // Labels et données pour le graphique des équipements
+                const labelsEquipements = ["En service", "Hors service", "Endommagé"];
+                const dataEquipements = [equipementsData.enService, equipementsData.horsService, equipementsData.endommage];
+                const colorsEquipements = ["#d9788a", "#a6876d", "#727c84"];
+
+                // Configuration du graphique Doughnut des équipements
+                const chartConfigEquipements = {
+                    type: "doughnut",
+                    data: {
+                        labels: labelsEquipements,
+                        datasets: [{
+                            data: dataEquipements,
+                            backgroundColor: colorsEquipements
+                        }]
+                    }
+                };
+
+                // Création des graphiques
+                new Chart(document.getElementById("doughnutChart"), chartConfigEquipements);
+                new Chart(document.getElementById("pieChart"), { ...chartConfigEquipements, type: "pie" });
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% block javascripts %}
+    <script>
+        function confirmDelete(equipementId) {
+            // Afficher la modal de confirmation
+            document.getElementById('confirmation-modal').style.display = 'flex';
+
+            // Définir le comportement du bouton "Confirmer"
+            document.getElementById('confirm-btn').onclick = function() {
+                // Faire une requête pour supprimer l'équipement
+                fetch('/equipements/' + equipementId, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Supprimer la ligne du tableau
+                        document.getElementById('equipement-' + equipementId).remove();
+                        document.getElementById('confirmation-modal').style.display = 'none'; // Fermer la modal
+                    } else {
+                        alert('Erreur lors de la suppression de l\'équipement.');
+                    }
+                });
+            };
+
+            // Définir le comportement du bouton "Annuler"
+            document.getElementById('cancel-btn').onclick = function() {
+                document.getElementById('confirmation-modal').style.display = 'none'; // Fermer la modal
+            };
+        }
+    </script>
+{% endblock %}
