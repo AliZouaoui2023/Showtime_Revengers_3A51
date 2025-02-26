@@ -31,7 +31,13 @@ final class DemandeController extends AbstractController
             'demandes' => $demandeRepository->findAll(),
         ]);
     }
-
+    #[Route('/ddd', name: 'app_demande_ind', methods: ['GET'])]
+    public function ind(DemandeRepository $demandeRepository): Response
+    {
+        return $this->render('demande/indexdemande.html.twig', [
+            'demandes' => $demandeRepository->findAll(),
+        ]);
+    }
 
     
 
@@ -159,9 +165,10 @@ final class DemandeController extends AbstractController
             $entityManager->remove($demande);
             $entityManager->flush();
         }
-
-        return $this->redirectToRoute('app_demande_index', [], Response::HTTP_SEE_OTHER);
+    
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
+    
 
 
     #[Route('/demande/{id}/valider', name: 'app_demande_validate', methods: ['POST'])]

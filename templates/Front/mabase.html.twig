@@ -14,6 +14,25 @@
     <link rel="stylesheet" href="../../Front/css/style.css">
 
     <style>
+    .form-select {
+    background: transparent !important; /* Fond transparent */
+    border: 1px solid white !important; /* Bordure blanche */
+    color: white !important; /* Texte blanc */
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    appearance: none; /* Supprime le style natif du navigateur */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Supprimer l'effet de focus */
+.form-select:focus {
+    background: transparent !important;
+    border: 1px solid white !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
 :root {
     --primary-color: #0088ff;
     --dark-bg: #020d18;

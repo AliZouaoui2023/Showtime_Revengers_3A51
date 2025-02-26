@@ -1,178 +1,68 @@
 {% extends 'Front/support.html.twig' %}
 
-{% block title %}Edit Demande{% endblock %}
+{% block title %}Modifier Demande{% endblock %}
 
-{% block main %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-lg">
-                    <div class="card-header bg-primary text-white rounded-top">
-                        <h1 class="h4 mb-0 text-center">ajoutez Demande</h1>
-                    </div>
-                    
-                    <div class="card-body">
-                        <h5 class="mb-4 text-center">Please edit the form below to update the demande</h5>
-                        <div class="table-responsive">
-                            <form method="post">
-                                <table class="table table-form">
-                                    <tbody>
-                                        {{ form_start(form) }}
-                                        {% for field in form %}
-                                            {% if field.vars.name != '_token' %}
-                                                <tr>
-                                                    <th class="align-middle">{{ form_label(field) }}</th>
-                                                    <td>{{ form_widget(field) }}</td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                        <tr>
-                                            <td colspan="2" class="text-center border-0 pt-4">
-                                                <button class="btn btn-success">{{ button_label|default('Save') }}</button>
-                                            </td>
-                                        </tr>
-                                        {{ form_end(form) }}
-                                    </tbody>
-                                </table>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="card-footer text-center rounded-bottom bg-warning">
-                        <a href="{{ path('app_demande_index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to List
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="text-center mt-4">
-        {{ include('demande/_delete_form.html.twig') }}
-    </div>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
+{% block body %}
     <style>
         .card {
             border-radius: 15px;
             overflow: hidden;
             border: none;
+            max-width: 800px;
         }
 
         .card-header {
-            border-bottom: 1px solid #e0e0e0;
             background-color: #007bff;
             padding: 1.5rem;
         }
 
-        .card-body {
-            padding: 2rem;
-            background-color: #f8f9fa;
-        }
-
-        /* Table Form Styling */
-        .table-form {
-            background-color: white;
-            border-radius: 8px;
-        }
-
         .table-form th {
             width: 30%;
-            padding: 1.5rem;
             background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
             vertical-align: middle;
         }
 
         .table-form td {
-            padding: 1.5rem;
-            border: 1px solid #dee2e6;
+            padding: 1.2rem;
         }
 
-        /* Input Styling */
         .form-control {
-            background-color: #e3f2fd !important; /* Light blue background */
+            background-color: #e3f2fd !important;
             border: 1px solid #90caf9;
             border-radius: 8px;
             padding: 0.75rem;
-            margin: 0.5rem 0;
-            transition: all 0.3s ease;
         }
 
-        .form-control:focus {
-            background-color: #bbdefb !important; /* Slightly darker blue on focus */
-            border-color: #64b5f6;
-            box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25);
-        }
-
-        /* Button Styling */
-        .btn {
-            padding: 0.75rem 1.5rem;
+        .form-select {
+            background-color: #e3f2fd !important;
+            border: 1px solid #90caf9;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            padding: 0.75rem;
         }
 
         .btn-success {
             background-color: #28a745;
-            border-color: #28a745;
-            color: white;
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
         }
 
-        .btn-success:hover {
-            background-color: #218838;
-            border-color: #1e7e34;
+        /* CSS pour masquer les champs */
+        .form-group[data-field="user"],
+        .form-group[data-field="admin"],
+        .form-group[data-field="statut"],
+        .form-group[data-field="dateSoumission"],
+        .form-group[data-field="id"] {
+            display: none;
         }
 
-        .btn-outline-secondary {
-            background-color: white;
-            border: 2px solid #6c757d;
-            color: #6c757d;
-        }
-
-        .btn-outline-secondary:hover {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .card-footer.bg-warning {
-            background-color: #ffc107;
-            padding: 1.5rem;
-        }
-
-        /* Spacing and Typography */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        h1, h5 {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .fas {
-            font-size: 16px;
-        }
-
-        /* Delete Button Styling */
-        .btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
-            color: white;
-            margin-top: 1rem;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-            border-color: #bd2130;
+        /* Si vous voulez les rendre en mode lecture seule, vous pouvez aussi utiliser */
+        .form-control[readonly], 
+        .form-select[disabled] {
+            background-color: #f0f0f0 !important;
+            border-color: #ccc !important;
         }
 
         @media (max-width: 767px) {
-            .table-form th {
-                width: 40%;
-            }
-            
             .card {
                 margin: 1rem;
             }
@@ -180,7 +70,71 @@
             .table-form th,
             .table-form td {
                 padding: 1rem;
+                display: block;
+                width: 100%;
+            }
+            
+            .table-form tr {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 1rem;
             }
         }
     </style>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white rounded-top">
+                        <h1 class="h4 mb-0 text-center">Modification de Demande</h1>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {{ form_start(form) }}
+                            <table class="table table-form">
+                                <tbody>
+                                    {% for field in form %}
+                                        {% if field.vars.name not in ['_token', 'user', 'admin', 'statut', 'dateSoumission', 'id'] %}
+                                            <tr>
+                                                <th class="align-middle">{{ form_label(field) }}</th>
+                                                <td>
+                                                    {% if field.vars.name == 'type' %}
+                                                        {{ form_widget(field, {
+                                                            'attr': {'class': 'form-select'},
+                                                            'choices': {
+                                                                'Footer Web': constant('App\\Entity\\Demande::TYPE_FOOTER_WEB'),
+                                                                'Intégré Film': constant('App\\Entity\\Demande::TYPE_INTEGREFILM'),
+                                                                'Backdrop': constant('App\\Entity\\Demande::TYPE_BACKDROP')
+                                                            }
+                                                        }) }}
+                                                    {% else %}
+                                                        {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <tr>
+                                        <td colspan="2" class="text-center border-0 pt-4">
+                                            <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-center rounded-bottom bg-warning">
+                        <a href="{{ path('app_demande_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
