@@ -22,6 +22,14 @@ final class FilmsController extends AbstractController
         ]);
     }
 
+    #[Route('/filmList',name: 'app_films_List', methods: ['GET'])]  
+    public function test(FilmsRepository $filmsRepository): Response
+    {
+        return $this->render('films/films.html.twig', [
+            'films' => $filmsRepository->findAll(),
+        ]);
+    }
+
     #[Route('/new', name: 'app_films_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -78,4 +86,6 @@ final class FilmsController extends AbstractController
 
         return $this->redirectToRoute('app_films_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    
 }
