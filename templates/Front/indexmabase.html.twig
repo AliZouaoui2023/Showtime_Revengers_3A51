@@ -60,7 +60,25 @@
             transition: all 0.3s ease;
             width: 120px;
         }
+        .btn-participate.btn-quitter {
+            background: #dc3545; /* Rouge pour "Quitter" */
+        }
         .btn-participate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .btn-show {
+            background: #28a745; /* Vert pour "Show" */
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80px;
+            margin-right: 5px; /* Espace entre les boutons */
+        }
+        .btn-show:hover {
             transform: translateY(-2px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
@@ -113,51 +131,67 @@
 {% endblock %}
 
 {% block body %}
-    <div class="content-wrapper">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="text-center">
-                    🎥 Liste des Cours 🎭
-                </h2>
-                <div class="table-responsive">
-                    <table class="table-custom">
-                        <thead>
+  <div class="content-wrapper">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="text-center">🎥 Liste des Cours 🎭</h2>
+
+            <!-- Formulaire de filtre -->
+            <form method="get" action="{{ path('app_cour_indexx') }}">
+                <label for="typeCour">Filtrer par type :</label>
+                <select name="type" id="typeCour" onchange="this.form.submit()">
+                    <option value="">Tous les types</option>
+                    {% for type in types %}
+                        <option value="{{ type.typeCour }}" {% if selectedType == type.typeCour %}selected{% endif %}>
+                            {{ type.typeCour }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>TypeCour</th>
+                            <th>Cout</th>
+                            <th>DateDebut</th>
+                            <th>DateFin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cour in cours %}
                             <tr>
-                                <th>TypeCour</th>
-                                <th>Cout</th>
-                                <th>DateDebut</th>
-                                <th>DateFin</th>
-                                <th>Actions</th>
+                                <td>{{ cour.typeCour }}</td>
+                                <td>{{ cour.cout }} DT</td>
+                                <td>{{ cour.dateDebut|date('d/m/Y H:i') }}</td>
+                                <td>{{ cour.dateFin|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    <a href="{{ path('app_cour_details', {'id': cour.id}) }}" class="btn-show">Show</a>
+                                    <button class="btn-participate {% if isInscrit[cour.id] %}btn-quitter{% endif %}" data-cour-id="{{ cour.id }}">
+                                        {{ isInscrit[cour.id] ? 'Quitter' : 'Participer' }}
+                                    </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for cour in cours %}
-                                <tr>
-                                    <td>{{ cour.typeCour }}</td>
-                                    <td>{{ cour.cout }} DT</td>
-                                    <td>{{ cour.dateDebut|date('d/m/Y H:i') }}</td>
-                                    <td>{{ cour.dateFin|date('d/m/Y H:i') }}</td>
-                                    <td>
-                                        <button class="btn-participate" data-cour-id="{{ cour.id }}">Participer</button>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="5" class="text-muted">Aucun cours trouvé</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-muted">Aucun cours trouvé</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
-    
+
+    <!-- Modal de confirmation -->
     <div id="participateModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Confirmation de participation</h2>
+            <h2>Confirmation</h2>
             <p>Êtes-vous sûr de vouloir participer à ce cours ?</p>
             <button id="confirmParticipation" class="btn-participate">Confirmer</button>
             <button id="cancelParticipation" class="btn-participate" style="background: gray;">Annuler</button>
@@ -165,26 +199,38 @@
     </div>
 
     <script>
-      
         let selectedCourseId = null;
 
-        
+        // Récupérer les éléments du DOM
         const modal = document.getElementById('participateModal');
         const closeBtn = document.querySelector('.close');
         const confirmBtn = document.getElementById('confirmParticipation');
         const cancelBtn = document.getElementById('cancelParticipation');
+        const modalMessage = document.querySelector('.modal-content p'); // Sélectionner le paragraphe du message
 
-       
+        // Gérer les clics sur les boutons "Participer"
         const participateButtons = document.querySelectorAll('.btn-participate[data-cour-id]');
         participateButtons.forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 selectedCourseId = btn.getAttribute('data-cour-id');
+
+                // Déterminer si l'utilisateur est déjà inscrit
+                const isInscrit = btn.textContent.trim() === 'Quitter';
+
+                // Ajuster le message du modal
+                if (isInscrit) {
+                    modalMessage.textContent = 'Êtes-vous sûr de vouloir quitter ce cours ?';
+                } else {
+                    modalMessage.textContent = 'Êtes-vous sûr de vouloir participer à ce cours ?';
+                }
+
+                // Afficher le modal
                 modal.style.display = 'block';
             });
         });
 
-        
+        // Fermer le modal
         closeBtn.addEventListener('click', function() {
             modal.style.display = 'none';
             selectedCourseId = null;
@@ -194,7 +240,7 @@
             selectedCourseId = null;
         });
 
-        
+        // Confirmer la participation ou la désinscription
         confirmBtn.addEventListener('click', function() {
             if (selectedCourseId) {
                 fetch(`/cour/${selectedCourseId}/inscrire`, { 
@@ -215,6 +261,15 @@
                 .then(data => {
                     if (data.success) {
                         alert(data.message); 
+                        // Mettre à jour le bouton
+                        const btn = document.querySelector(`.btn-participate[data-cour-id="${selectedCourseId}"]`);
+                        if (data.isInscrit) {
+                            btn.textContent = 'Quitter';
+                            btn.classList.add('btn-quitter'); // Ajouter la classe rouge
+                        } else {
+                            btn.textContent = 'Participer';
+                            btn.classList.remove('btn-quitter'); // Supprimer la classe rouge
+                        }
                     } else {
                         alert('Une erreur est survenue: ' + data.message);
                     }
@@ -230,7 +285,7 @@
             }
         });
 
-    
+        // Fermer le modal en cliquant à l'extérieur
         window.addEventListener('click', function(e) {
             if (e.target == modal) {
                 modal.style.display = 'none';

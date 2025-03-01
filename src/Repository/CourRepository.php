@@ -40,4 +40,25 @@ class CourRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+// src/Repository/CoursRepository.php
+public function findDistinctTypes(): array
+{
+    return $this->createQueryBuilder('c')
+        ->select('DISTINCT c.typeCour')
+        ->getQuery()
+        ->getResult();
+}
+
+public function findAllSorted(): array
+{
+    return $this->createQueryBuilder('c')
+        ->orderBy('c.dateDebut', 'ASC')
+        ->addOrderBy('c.dateFin', 'ASC')
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
 }

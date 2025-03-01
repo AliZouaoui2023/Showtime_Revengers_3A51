@@ -213,4 +213,8 @@ class Cour
 
         return $this;
     }
+    public function isUserInscrit(User $user): bool
+    {
+        return $this->getUsers()->contains($user);
+    }
 }

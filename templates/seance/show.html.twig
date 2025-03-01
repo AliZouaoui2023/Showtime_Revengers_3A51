@@ -97,11 +97,14 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ seance.id }}</td>
-                                <td>{{ seance.dateSeance|date('d/m/Y') }}</td>
-                                <td>{{ seance.duree }}</td>
-                                <td>{{ seance.objectifs }}</td>
-                                <td>{{ seance.cour.typeCour }}</td>
+                               <tr>
+    <td>{{ seance.id }}</td>
+    <td>{{ seance.dateSeance ? seance.dateSeance|date('d/m/Y') : 'N/A' }}</td>
+    <td>{{ seance.duree ? seance.duree|date('H:i:s') : 'N/A' }}</td> <!-- Si duree est un DateTime -->
+    <td>{{ seance.objectifs }}</td>
+    <td>{{ seance.cour.typeCour }}</td>
+</tr>
+
                             </tr>
                         </tbody>
                     </table>
