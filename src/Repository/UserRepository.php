@@ -15,6 +15,37 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+// src/Repository/UserRepository.php
+public function countUsersByRole(): array
+{
+    return $this->createQueryBuilder('u')
+        ->select('u.role, COUNT(u.id) as count')
+        ->groupBy('u.role')
+        ->getQuery()
+        ->getResult(\Doctrine\ORM\Query::HYDRATE_SCALAR);
+}
+
+public function findByCriteria(?string $name, ?string $email, ?string $role): array
+{
+    $qb = $this->createQueryBuilder('u');
+
+    if ($name) {
+        $qb->andWhere('u.Nom LIKE :name')
+           ->setParameter('name', '%' . $name . '%');
+    }
+
+    if ($email) {
+        $qb->andWhere('u.email LIKE :email')
+           ->setParameter('email', '%' . $email . '%');
+    }
+
+    if ($role) {
+        $qb->andWhere('u.role = :role')
+           ->setParameter('role', $role);
+    }
+
+    return $qb->getQuery()->getResult();
+}
 
     //    /**
     //     * @return User[] Returns an array of User objects
