@@ -1,0 +1,248 @@
+{% extends 'Front/mmabase.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .content-wrapper {
+            padding: 2rem;
+            margin-top: 20px; /* Réduit la marge supérieure pour faire glisser la carte vers le haut */
+        }
+        .card {
+            background: var(--card-bg, #1a1a1a);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .card-body {
+            color: var(--text-color, #ffffff);
+        }
+        h2 {
+            font-family: 'Dosis', sans-serif;
+            color: var(--primary-color, rgb(0, 0, 0)); /* Couleur de la liste des cours en noir */
+            margin-bottom: 2rem;
+        }
+        .course-list {
+            display: flex;
+            flex-wrap: wrap; /* Permet aux cartes de s'enrouler à la ligne suivante si l'espace est insuffisant */
+            justify-content: space-between; /* Distribue l'espace entre les cartes */
+        }
+        .course-card {
+            flex: 1 1 calc(30% - 1rem); /* Ajuste la largeur des cartes */
+            margin: 0.5rem; /* Ajoute une marge entre les cartes */
+            max-width: 300px; /* Largeur maximale pour les cartes */
+            display: flex; /* Assure que le contenu de la carte est également flex */
+            flex-direction: column; /* Garde le contenu en disposition colonne */
+            justify-content: space-between; /* Espace le contenu */
+            background: var(--dark-bg, #2a2a2a);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .course-type {
+            font-weight: bold;
+            color: var(--primary-color, #3498db);
+            text-align: left; /* Aligner à gauche */
+        }
+        .course-cost {
+            text-align: right; /* Aligner à droite */
+            margin-top: 10px;
+            font-weight: bold; /* Met le prix en gras */
+        }
+        .course-info {
+            display: flex; /* Utiliser flex pour aligner le type de cours et le prix */
+            justify-content: space-between; /* Espacer le type de cours et le prix */
+            align-items: center; /* Centrer verticalement */
+        }
+        .course-dates {
+            margin-top: 10px;
+        }
+        .btn-participate,
+        .btn-show {
+            background: var(--primary-color, rgb(2, 163, 93));
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px 0;
+        }
+        .btn-show {
+            background: rgb(2, 163, 93); /* Couleur verte pour le bouton "Show" */
+        }
+        .btn-participate.btn-quitter {
+            background: #dc3545; /* Rouge pour "Quitter" */
+        }
+        .btn-participate:hover,
+        .btn-show:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .text-muted {
+            color: rgb(0, 0, 0);
+            font-style: italic;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+  <div class="content-wrapper">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="text-center">🎥 Liste des Cours 🎭</h2>
+
+            <!-- Formulaire de filtre -->
+            <form method="get" action="{{ path('app_cour_indexx') }}">
+                <label for="typeCour">Filtrer par type :</label>
+                <select name="type" id="typeCour" onchange="this.form.submit()">
+                    <option value="">Tous les types</option>
+                    {% for type in types %}
+                        <option value="{{ type.typeCour }}" {% if selectedType == type.typeCour %}selected{% endif %}>
+                            {{ type.typeCour }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+
+            <div class="course-list">
+                {% for cour in cours %}
+                    <div class="course-card">
+                        <div class="course-info">
+                            <div class="course-type">{{ cour.typeCour }}</div>
+                            <div class="course-cost">{{ cour.cout }} DT</div>
+                        </div>
+                        <div class="course-dates">
+                            <div>Date Debut: {{ cour.dateDebut|date('d/m/Y H:i') }}</div>
+                            <div>Date Fin: {{ cour.dateFin|date('d/m/Y H:i') }}</div>
+                        </div>
+                        <div>
+                            <a href="{{ path('app_cour_details', {'id': cour.id}) }}" class="btn-show">Show</a>
+                            <button class="btn-participate {% if isInscrit[cour.id] %}btn-quitter{% endif %}" data-cour-id="{{ cour.id }}">
+                                {{ isInscrit[cour.id] ? 'Quitter' : 'Participer' }}
+                            </button>
+                             <!-- Bouton pour envoyer l'email de confirmation -->
+               <!-- Bouton pour envoyer l'email de confirmation -->
+                            
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-muted">Aucun cours trouvé</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation -->
+<div id="participateModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Confirmation</h2>
+        <p>Êtes-vous sûr de vouloir participer à ce cours ?</p>
+        <button id="confirmParticipation" class="btn-participate">Confirmer</button>
+        <button id="cancelParticipation" class="btn-participate" style="background: gray;">Annuler</button>
+    </div>
+</div>
+
+<script>
+    let selectedCourseId = null;
+
+    // Récupérer les éléments du DOM
+    const modal = document.getElementById('participateModal');
+    const closeBtn = document.querySelector('.close');
+    const confirmBtn = document.getElementById('confirmParticipation');
+    const cancelBtn = document.getElementById('cancelParticipation');
+    const modalMessage = document.querySelector('.modal-content p'); // Sélectionner le paragraphe du message
+
+    // Gérer les clics sur les boutons "Participer"
+    const participateButtons = document.querySelectorAll('.btn-participate[data-cour-id]');
+    participateButtons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            selectedCourseId = btn.getAttribute('data-cour-id');
+
+            // Déterminer si l'utilisateur est déjà inscrit
+            const isInscrit = btn.textContent.trim() === 'Quitter';
+
+            // Ajuster le message du modal
+            if (isInscrit) {
+                modalMessage.textContent = 'Êtes-vous sûr de vouloir quitter ce cours ?';
+            } else {
+                modalMessage.textContent = 'Êtes-vous sûr de vouloir participer à ce cours ?';
+            }
+
+            // Afficher le modal
+            modal.style.display = 'block';
+        });
+    });
+
+    // Fermer le modal
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        selectedCourseId = null;
+    });
+    cancelBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        selectedCourseId = null;
+    });
+
+    // Confirmer la participation ou la désinscription
+    confirmBtn.addEventListener('click', function() {
+        if (selectedCourseId) {
+            fetch(`/cour/${selectedCourseId}/inscrire`, { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Erreur inconnue');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.message); 
+                    // Mettre à jour le bouton
+                    const btn = document.querySelector(`.btn-participate[data-cour-id="${selectedCourseId}"]`);
+                    if (data.isInscrit) {
+                        btn.textContent = 'Quitter';
+                        btn.classList.add('btn-quitter'); // Ajouter la classe rouge
+                    } else {
+                        btn.textContent = 'Participer';
+                        btn.classList.remove('btn-quitter'); // Supprimer la classe rouge
+                    }
+                } else {
+                    alert('Une erreur est survenue: ' + data.message);
+                }
+                modal.style.display = 'none';
+                selectedCourseId = null;
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue: ' + error.message);
+                modal.style.display = 'none';
+                selectedCourseId = null;
+            });
+        }
+    });
+
+    // Fermer le modal en cliquant à l'extérieur
+    window.addEventListener('click', function(e) {
+        if (e.target == modal) {
+            modal.style.display = 'none';
+            selectedCourseId = null;
+        }
+    });
+</script>
+{% endblock %}

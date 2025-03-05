@@ -1,0 +1,123 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Détails du Cours{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .detail-container {
+            margin-left: 250px;
+            padding: 30px;
+            margin-top: 60px;
+            background-color: rgb(20, 111, 125);
+            min-height: calc(100vh - 60px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 80%;
+            margin: auto;
+        }
+
+        .card-body {
+            text-align: center;
+        }
+
+        .table-responsive {
+            margin: 0 auto;
+            width: 95%;
+        }
+
+        .detail-header {
+            color: rgb(231, 3, 98);
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .btn-custom {
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+       
+        .btn-back { background-color: #95a5a6; color: white; }
+        .btn-back:hover { background-color: #7f8c8d; }
+        .btn-edit { background-color: #f39c12; color: white; }
+        .btn-delete { background-color:rgb(232, 47, 27); color: white; border: none; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div style="display: flex;align-items: center;justify-content: center;margin-left: 300px;margin-top:10px;">
+        <div class="card">
+            <div class="card-body">
+                <h4 style="display: flex;align-items: center;justify-content: center;" >Détails du Cours</h4>
+               
+                
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Type de cours</th>
+                                <th>Coût</th>
+                                <th>Date de début</th>
+                                <th>Date de fin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ cour.id }}</td>
+                                <td>
+                                    <label class="badge badge-info">{{ cour.typeCour }}</label>
+                                </td>
+                                <td>{{ cour.cout }} DT</td>
+                                <td>{{ cour.dateDebut ? cour.dateDebut|date('d/m/Y') : '' }}</td>
+                                <td>{{ cour.dateFin ? cour.dateFin|date('d/m/Y') : '' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="action-buttons mt-4">
+                    <a href="{{ path('app_cour_index') }}" class="btn-custom btn-back">
+                        <i class="mdi mdi-arrow-left"></i> Retour
+                    </a>
+                    
+       <button type="button" 
+        class="btn-custom" 
+        style="background-color: #ffc107 !important;margin-left:19px;"
+        onclick="window.location.href='{{ path('app_cour_edit', {'id': cour.id}) }}'">
+    <i class="mdi mdi-pencil"></i> Modifier
+</button>
+                    <form method="POST" action="{{ path('app_cour_delete', {'id': cour.id}) }}" 
+                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')"
+                        class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cour.id) }}">
+                       <button type="submit" style="background-color: #dc3545 !important;margin-left:180px;">
+    <i class="mdi mdi-delete"></i> Supprimer
+</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'Front/mmabase.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/main.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/main.min.css" rel="stylesheet" />
+    <style>
+        .event-red {
+            background-color:rgb(151, 13, 13) !important; /* Rouge */
+            border-color:rgb(0, 0, 0) !important;
+        }
+        .event-green {
+            background-color: #00ff00 !important; /* Vert */
+            border-color: #00ff00 !important;
+        }
+        .event-blue {
+            background-color: #0000ff !important; /* Bleu */
+            border-color: #0000ff !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div id='calendar'></div>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: function(fetchInfo, successCallback, failureCallback) {
+                    fetch('{{ path('api_seances') }}')
+                        .then(response => response.json())
+                        .then(data => {
+                            const events = data.map(seance => ({
+                                id: seance.id,
+                                title: seance.title,
+                                start: seance.start,
+                                classNames: ['event-red'] // Utilisez une classe CSS personnalisée
+                            }));
+                            successCallback(events);
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération des événements:', error);
+                            failureCallback(error);
+                        });
+                },
+                editable: true,
+                selectable: true,
+                select: function(info) {
+                    alert('Selected ' + info.startStr + ' to ' + info.endStr);
+                },
+                eventClick: function(info) {
+                    alert('Event: ' + info.event.title);
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock %}

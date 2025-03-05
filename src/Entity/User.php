@@ -2,71 +2,75 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-class User 
+#[ORM\Entity]
+#[ORM\Table(name: 'user')]
+class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\Regex(
-        pattern: "/^[A-Za-zÀ-ÿéèêôîçïù\s]+$/",
-        message: "Le nom ne doit contenir que des lettres (sans chiffres)."
-    )]
-    private ?string $Nom = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $nom;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date_de_naissance = null;
+    #[ORM\Column(type: 'date')]
+    private \DateTimeInterface $dateDeNaissance;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Email(message: "L'email {{ value }} n'est pas valide.")]
-    #[Assert\NotBlank(message: "L'email est obligatoire.")]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $role = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $role;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
-    #[Assert\Length(min: 8, minMessage: "Le mot de passe doit contenir au moins 8 caractères.")]
-    private ?string $mot_de_passe = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $motDePasse;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $photo = null;
+
+    /**
+     * @var Collection<int, Cour>
+     */
+    #[ORM\ManyToMany(targetEntity: Cour::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'participation')]
+    private Collection $cours;
+
+    public function __construct()
+    {
+        $this->cours = new ArrayCollection();
+    }
+
+    // GETTERS & SETTERS
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNom(): string
     {
-        return $this->Nom;
+        return $this->nom;
     }
 
-    public function setNom(string $Nom): static
+    public function setNom(string $nom): self
     {
-        $this->Nom = $Nom;
+        $this->nom = $nom;
 
         return $this;
     }
 
-    public function getDateDeNaissance(): ?\DateTimeInterface
+    public function getDateDeNaissance(): \DateTimeInterface
     {
-        return $this->date_de_naissance;
+        return $this->dateDeNaissance;
     }
 
-    public function setDateDeNaissance(\DateTimeInterface $date_de_naissance): static
+    public function setDateDeNaissance(\DateTimeInterface $dateDeNaissance): self
     {
-        $this->date_de_naissance = $date_de_naissance;
+        $this->dateDeNaissance = $dateDeNaissance;
 
         return $this;
     }
@@ -76,33 +80,33 @@ class User
         return $this->email;
     }
 
-    public function setEmail(?string $email): static
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getRole(): ?string
+    public function getRole(): string
     {
         return $this->role;
     }
 
-    public function setRole(string $role): static
+    public function setRole(string $role): self
     {
         $this->role = $role;
 
         return $this;
     }
 
-    public function getMotDePasse(): ?string
+    public function getMotDePasse(): string
     {
-        return $this->mot_de_passe;
+        return $this->motDePasse;
     }
 
-    public function setMotDePasse(string $mot_de_passe): static
+    public function setMotDePasse(string $motDePasse): self
     {
-        $this->mot_de_passe = $mot_de_passe;
+        $this->motDePasse = $motDePasse;
 
         return $this;
     }
@@ -112,9 +116,34 @@ class User
         return $this->photo;
     }
 
-    public function setPhoto(?string $photo): static
+    public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+   
+
+    /**
+     * @return Collection<int, Cour>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cour $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours->add($cour);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cour $cour): self
+    {
+        $this->cours->removeElement($cour);
 
         return $this;
     }

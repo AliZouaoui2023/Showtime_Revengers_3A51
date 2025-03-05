@@ -1,0 +1,21 @@
+{% extends 'Back/base.html.twig' %} {# Étendre directement le template de base #}
+
+{% block title %}Modifier Cours{% endblock %}
+
+{% block body %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('cour/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

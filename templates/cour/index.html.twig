@@ -1,0 +1,126 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}
+    <title>Cour</title>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .table-custom {
+            font-size: 14px;
+            width: 50%;
+            table-layout: fixed;
+        }
+
+        .table-custom th,
+        .table-custom td {
+            padding: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .actions-column {
+            width: 120px !important;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+        }
+
+        .table-custom .badge {
+            font-size: 10px;
+            padding: 2px 4px;
+            min-width: 45px;
+        }
+
+        .table-responsive {
+            margin-top: 5px;
+            overflow-x: auto;
+        }
+
+        .card {
+            margin-top: 5px;
+        }
+
+        .custom-pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div style="display: flex; align-items: center; justify-content: center; margin-left: 40px; margin-top: 60px;">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <h2 style="text-align: center;">🎥 Liste des Cours 🎭</h2>
+                <a href="{{ path('app_cour_new') }}" class="btn btn-primary mt-3 mb-2">➕ Créer un nouveau cours</a>
+                <a href="{{ path('app_cour_statistiques') }}" class="btn btn-secondary mt-3 mb-2">📊 Voir les Statistiques</a>
+
+                <div id="statistiques-result" style="display: none; margin-top: 20px;">
+                    <h3>Statistiques des Cours</h3>
+                    <ul id="statistiques-list"></ul>
+                </div>
+
+                <table class="table table-bordered table-custom">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>TypeCour</th>
+                            <th>Cout</th>
+                            <th>DateDebut</th>
+                            <th>DateFin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for cour in cours %}
+                        <tr class="table-info">
+                            <td>{{ cour.id }}</td>
+                            <td>{{ cour.typeCour }}</td>
+                            <td>{{ cour.cout }}</td>
+                            <td>{{ cour.dateDebut ? cour.dateDebut|date('d/m/Y H:i') : '' }}</td>
+                            <td>{{ cour.dateFin ? cour.dateFin|date('d/m/Y H:i') : '' }}</td>
+                            <td class="actions-column">
+                                <div class="action-buttons">
+                                    <a href="{{ path('app_cour_show', {'id': cour.id}) }}" class="btn btn-sm btn-info">👁 VOIR</a>
+                                    <a href="{{ path('app_cour_edit', {'id': cour.id}) }}" class="btn btn-sm btn-warning">✏ MODIFIER</a>
+                                    <form method="POST" action="{{ path('app_cour_delete', {'id': cour.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?');" class="d-inline">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cour.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">🗑 SUPPRIMER</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr class="table-danger">
+                            <td colspan="6">Aucun cours trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if cours.pageCount > 1 %}
+                    <div class="custom-pagination">
+                        {{ knp_pagination_render(cours, '@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig', {
+                            'align': 'center',
+                            'size': 'small',
+                            'span_class': 'page-link'
+                        }) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

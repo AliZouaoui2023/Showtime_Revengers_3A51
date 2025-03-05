@@ -1,0 +1,136 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Détails de la Séance{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .detail-container {
+            margin-left: 250px;
+            padding: 30px;
+            margin-top: 60px;
+            background-color: rgb(20, 111, 125);
+            min-height: calc(100vh - 60px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 80%;
+            margin: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-body {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .table-responsive {
+            margin: 0 auto;
+            width: 95%;
+        }
+
+        .detail-header {
+            color: rgb(231, 3, 98);
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .btn-custom {
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-back { 
+            background-color: #95a5a6; 
+            color: white; 
+        }
+        .btn-back:hover { 
+            background-color: #7f8c8d; 
+        }
+        .btn-edit { 
+            background-color: #f39c12; 
+            color: white; 
+        }
+        .btn-delete { 
+            background-color: rgb(232, 47, 27); 
+            color: white; 
+            border: none; 
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div style="display: flex;align-items: center;justify-content: center;margin-left: 300px;margin-top:10px;">
+        <div class="card">
+            <div class="card-body">
+                <h4 style="display: flex;align-items: center;justify-content: center;">Détails de la Séance</h4>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Durée</th>
+                                <th>Objectifs</th>
+                                <th>Cours Associé</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                               <tr>
+    <td>{{ seance.id }}</td>
+    <td>{{ seance.dateSeance ? seance.dateSeance|date('d/m/Y') : 'N/A' }}</td>
+    <td>{{ seance.duree ? seance.duree|date('H:i:s') : 'N/A' }}</td> <!-- Si duree est un DateTime -->
+    <td>{{ seance.objectifs }}</td>
+    <td>{{ seance.cour.typeCour }}</td>
+</tr>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                 <div class="action-buttons mt-4">
+                    <a href="{{ path('app_seance_index') }}" class="btn-custom btn-back">
+                        <i class="mdi mdi-arrow-left"></i> Retour
+                    </a>
+                    
+       <button type="button" 
+        class="btn-custom" 
+        style="background-color: #ffc107 !important;margin-left:19px;"
+        onclick="window.location.href='{{ path('app_seance_edit', {'id': seance.id}) }}'">
+    <i class="mdi mdi-pencil"></i> Modifier
+</button>
+                    <form method="POST" action="{{ path('app_seance_delete', {'id': seance.id}) }}" 
+                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')"
+                        class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ seance.id) }}">
+                       <button type="submit" style="background-color: #dc3545 !important;margin-left:180px;">
+    <i class="mdi mdi-delete"></i> Supprimer
+</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

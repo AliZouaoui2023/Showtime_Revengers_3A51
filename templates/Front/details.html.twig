@@ -1,0 +1,152 @@
+{% extends 'Front/mmabase.html.twig' %}
+
+{% block title %}Détails du Cours{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .detail-container {
+            padding: 30px;
+            margin-top: -30px; /* Réduit la marge supérieure pour faire glisser la carte vers le haut */
+            min-height: calc(100vh - 60px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 80%;
+            margin: 0; /* Supprime la marge pour rapprocher la carte du haut */
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgb(0, 4, 23); /* Fond de la carte */
+        }
+
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .table-responsive {
+            margin: 0 auto;
+            width: 95%;
+            overflow-x: auto;
+        }
+
+        .detail-header {
+            color: rgb(255, 255, 255);
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgb(128, 128, 128);
+        }
+
+        .btn-custom {
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-back {
+            background-color: rgb(128, 128, 128); /* Couleur gris foncé pour le bouton */
+            color: white;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            color: rgb(0, 0, 0);
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: rgb(0, 0, 23); /* Couleur de fond des en-têtes de tableau (bleu marine) */
+            font-weight: bold;
+            color: white; /* Couleur du texte des en-têtes */
+        }
+
+        .table tbody tr {
+            background-color: rgb(128, 128, 128); /* Couleur de fond des lignes de tableau */
+            color: white; /* Couleur du texte des lignes */
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+
+        .badge-info {
+            color: #fff;
+            background-color: rgb(1, 7, 8);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="detail-container">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="detail-header">Détails du Cours</h4>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Type de cours</th>
+                                <th>Coût</th>
+                                <th>Date de début</th>
+                                <th>Date de fin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ cour.id }}</td>
+                                <td>
+                                    <label class="badge badge-info">{{ cour.typeCour }}</label>
+                                </td>
+                                <td>{{ cour.cout }} DT</td>
+                                <td>{{ cour.dateDebut ? cour.dateDebut|date('d/m/Y') : '' }}</td>
+                                <td>{{ cour.dateFin ? cour.dateFin|date('d/m/Y') : '' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="action-buttons mt-4">
+                    <a href="{{ path('app_cour_indexx') }}" class="btn-custom btn-back" aria-label="Retour à la liste des cours">
+                        <i class="mdi mdi-arrow-left"></i> Retour
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
