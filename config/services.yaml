@@ -1,10 +1,9 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+# config/services.yaml
 parameters:
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
     images_directory: '%kernel.project_dir%/public/uploads/images'
+
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -19,6 +18,12 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    # Explicit configuration for FacePlusPlusService
+    App\Service\FacePlusPlusService:
+        arguments:
+            $apiKey: '%env(FACEPP_API_KEY)%'
+            $apiSecret: '%env(FACEPP_API_SECRET)%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

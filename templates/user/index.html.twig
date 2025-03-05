@@ -3,57 +3,90 @@
 {% block title %}Users{% endblock %}
 
 {% block body %}
-    <h1>User index</h1>
-<a href="{{ path('app_user_account') }}">
-            <button type="button">Go to your Account</button>
-        </a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Date_de_naissance</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Mot_de_passe</th>
-                <th>Photo</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.Nom }}</td>
-                <td>{{ user.DateDeNaissance ? user.DateDeNaissance|date('Y-m-d') : '' }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.role }}</td>
-                <td>{{ user.motDePasse }}</td>
-                <td>
-                    {% if user.photo %}
-                        <img src="{{ asset('uploads/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto;">
-                    {% else %}
-                        <span>No photo</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-                
-                  <!-- Delete form -->
-                    <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="POST" style="display:inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this user?')" class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div style="margin-bottom: 40px;">
+        <h1>Users</h1>
 
-    <a href="{{ path('app_user_new') }}">Create new</a>
+        <!-- Conteneur principal pour aligner les sections -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+
+            <!-- Boutons -->
+            <div style="display: flex; justify-content: start; gap: 10px;">
+                <a href="{{ path('app_user_account') }}">
+                    <button type="button" style="padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Go to your Account</button>
+                </a>
+                <a href="{{ path('app_user_new') }}">
+                    <button type="button" style="padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Create new User</button>
+                </a>
+                <a href="{{ path('app_user_stats') }}">
+                    <button type="button" style="padding: 10px 15px; background-color: #17a2b8; color: white; border: none; border-radius: 5px; cursor: pointer;">View Statistics</button>
+                </a>
+            </div>
+
+            <!-- Formulaire de recherche -->
+<!-- Search Form -->
+<form id="searchForm">
+    <div style="display: flex; gap: 10px;">
+        <input type="text" id="searchName" name="search" placeholder="Search by name..." value="{{ app.request.query.get('search') }}" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; flex: 1;">
+        <input type="text" id="searchEmail" name="email" placeholder="Search by email..." value="{{ app.request.query.get('email') }}" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; flex: 1;">
+        <select id="searchRole" name="role" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; flex: 1;">
+            <option value="">All Roles</option>
+            <option value="Client" {% if app.request.query.get('role') == 'Client' %}selected{% endif %}>Client</option>
+            <option value="Admin" {% if app.request.query.get('role') == 'Admin' %}selected{% endif %}>Admin</option>
+            <option value="Sponsor" {% if app.request.query.get('role') == 'Sponsor' %}selected{% endif %}>Sponsor</option>
+            <option value="Coach" {% if app.request.query.get('role') == 'Coach' %}selected{% endif %}>Coach</option>
+        </select>
+        <button type="submit" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Search</button>
+    </div>
+</form>
+
+            <!-- Tableau des utilisateurs avec scroll -->
+            <div style="overflow: auto; max-width: 100%; max-height: 500px; border: 1px solid #ddd; padding: 10px;">
+                <table style="width: 100%; border-collapse: collapse; white-space: nowrap;">
+                    <thead>
+                        <tr style="background-color:rgb(15, 12, 209);">
+                            <th style="padding: 8px; border: 1px solid #ddd;">Id</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Nom</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Date de naissance</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Email</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Role</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Mot de passe</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Photo</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ user.id }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ user.Nom }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ user.DateDeNaissance ? user.DateDeNaissance|date('Y-m-d') : '' }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ user.email }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ user.role }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">{{ user.motDePasse }}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
+                                    {% if user.photo %}
+                                        <img src="{{ asset('Back/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto; border-radius: 50%;">
+                                    {% else %}
+                                        <span>No photo</span>
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
+                                    <a href="{{ path('app_user_show', {'id': user.id}) }}" style="margin-right: 5px; text-decoration: none; color: #007bff;">show</a>
+                                    <a href="{{ path('app_user_edit', {'id': user.id}) }}" style="margin-right: 5px; text-decoration: none; color: #28a745;">edit</a>
+                                    <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="POST" style="display:inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this user?')" style="padding: 5px 10px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.8em;">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="8" style="padding: 8px; border: 1px solid #ddd; text-align: center;">No records found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

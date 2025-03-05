@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Login</title>
+    <style>
+        /* Global styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full height of the viewport */
+            background-image: url('/uploads/images/face3.jpg'); /* Background image */
+            background-size: cover; /* Ensure the image covers the entire viewport */
+            background-position: center center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent image repetition */
+        }
+
+        /* Wrapper for the form */
+        .face-login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Form container */
+        .face-login-content {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        /* Form title */
+        .face-login-content h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333; /* Dark text color */
+        }
+
+        /* Form group for input fields */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        /* Label styling */
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        /* File input styling */
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+
+        /* Submit button styling */
+        .face-login-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue background */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%; /* Full width */
+        }
+
+        /* Hover effect for the button */
+        .face-login-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Error message styling */
+        .alert.alert-danger {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffebee; /* Light red background */
+            color: #c62828; /* Dark red text */
+            border: 1px solid #c62828;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    {% block body %}
+        <div class="face-login-wrapper">
+            <div class="face-login-content">
+                <h1>Face Login</h1>
+                <form method="post" enctype="multipart/form-data" class="face-login-form" id="faceLoginForm">
+                    <div class="form-group">
+                        <label for="face_photo">Capture your photo:</label>
+                        <div id="camera-preview">
+                            <video id="video" width="320" height="240" autoplay></video>
+                            <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                        </div>
+                        <button type="button" id="capture-btn" class="face-login-button">Capture Photo</button>
+                        <input type="hidden" name="face_photo" id="face_photo">
+                    </div>
+                    <button type="submit" class="face-login-button">Login with Face</button>
+                </form>
+
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const video = document.getElementById('video');
+                const canvas = document.getElementById('canvas');
+                const captureBtn = document.getElementById('capture-btn');
+                const facePhotoInput = document.getElementById('face_photo');
+                const form = document.getElementById('faceLoginForm');
+
+                // Access the webcam
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                        video.srcObject = stream;
+                    })
+                    .catch(function (error) {
+                        console.error('Error accessing the webcam:', error);
+                    });
+
+                // Capture the image from the webcam
+                captureBtn.addEventListener('click', function () {
+                    const context = canvas.getContext('2d');
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    // Convert the canvas image to a data URL and set it as the value of the hidden input
+                    const imageDataUrl = canvas.toDataURL('image/png');
+                    facePhotoInput.value = imageDataUrl;
+
+                    // Optionally, display the captured image
+                    video.style.display = 'none';
+                    canvas.style.display = 'block';
+                });
+
+                // Handle form submission
+                form.addEventListener('submit', function (event) {
+                    if (!facePhotoInput.value) {
+                        event.preventDefault();
+                        alert('Please capture a photo before submitting.');
+                    }
+                });
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>

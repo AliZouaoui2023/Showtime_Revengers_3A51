@@ -17,13 +17,17 @@
                         <div class="form-container">
                             {{ form_start(form) }}
                                 {% for field in form %}
-                                    {% if field.vars.name != '_token' and field.vars.name != 'submit' and field.vars.name != 'user' and field.vars.name != 'admin' %}
+                                    {% if field.vars.name != '_token' and field.vars.name != 'submit' and field.vars.name != 'admin' %}
                                         <div class="mb-3">
                                             <label for="{{ field.vars.id }}" class="form-label">{{ form_label(field) }}</label>
                                             {{ form_widget(field, {'attr': {'class': 'form-control p-3'} }) }}
                                         </div>
                                     {% endif %}
                                 {% endfor %}
+                                
+                                <!-- Champ caché pour l'utilisateur -->
+                                {{ form_row(form.user, {'attr': {'type': 'hidden'}}) }}
+
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success btn-lg px-5">{{ button_label|default('Save') }}</button>
                                 </div>
@@ -46,16 +50,11 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Définir les ID fixes pour user (3) et admin (1) avant l'envoi du formulaire
+        // Définir uniquement l'ID fixe pour l'admin avant l'envoi du formulaire
         document.addEventListener('DOMContentLoaded', function() {
-            var userField = document.querySelector('input[name="demande[user]"]');
             var adminField = document.querySelector('input[name="demande[admin]"]');
             
-            // Vérifier si les champs existent et injecter les valeurs
-            if (userField) {
-                userField.value = 3; // ID utilisateur fixe
-                userField.type = 'hidden'; // Cacher le champ dans le formulaire
-            }
+            // Vérifier si le champ admin existe et injecter la valeur
             if (adminField) {
                 adminField.value = 1; // ID administrateur fixe
                 adminField.type = 'hidden'; // Cacher le champ dans le formulaire
@@ -63,4 +62,3 @@
         });
     </script>
 {% endblock %}
-

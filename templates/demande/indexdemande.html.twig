@@ -3,13 +3,11 @@
 {% block title %}Listes des Demandes{% endblock %}
 
 {% block body %}
-
 <div class="container-fluid px-4">
- <div class="card shadow mb-4 border-0 rounded-3 overflow-hidden">
-    <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background-color: #007bff;">
-        <h4 class="card-title mb-0 text-white">Liste des Demandes</h4>
-    </div>
-
+    <div class="card shadow mb-4 border-0 rounded-3 overflow-hidden">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background-color: #007bff;">
+            <h4 class="card-title mb-0 text-white">Liste des Demandes</h4>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover align-middle table-bordered shadow-sm rounded" style="font-size: 1.2rem;">
@@ -43,20 +41,31 @@
                             </td>
                             <td>{{ demande.dateSoumission ? demande.dateSoumission|date('d/m/Y') : 'Non spécifiée' }}</td>
                             <td style="text-align: center; width: 250px;">
-                                <div style="display: inline-flex; flex-direction: row; gap: 10px; justify-content: center;">
+                                <div style="display: inline-flex; flex-direction: row; gap: 8px; justify-content: center;">
                                     <form action="{{ path('app_demande_delete', {'id': demande.id}) }}" 
                                           method="post" style="display: inline-block;">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ demande.id) }}">
                                         <button type="submit" 
-                                                class="btn btn-danger btn-lg"
-                                                style="width: 150px;"
+                                                class="btn btn-danger btn-sm"
                                                 title="Supprimer"
                                                 onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')">
                                             <i class="fas fa-trash-alt me-1"></i>
                                             <span>Supprimer</span>
                                         </button>
                                     </form>
-
+                                    <a href="{{ path('app_demande_edit', {'id': demande.id}) }}"
+                                       class="btn btn-warning btn-sm"
+                                       title="Modifier">
+                                        <i class="fas fa-edit me-1"></i>
+                                        <span>Modifier</span>
+                                    </a>
+                                    <!-- Bouton Télécharger PDF -->
+                                    <a href="{{ path('app_demande_pdf', {'id': demande.id}) }}"
+                                       class="btn btn-primary btn-sm"
+                                       title="Télécharger PDF">
+                                        <i class="fas fa-download me-1"></i>
+                                        <span>PDF</span>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -78,100 +87,122 @@
 
 {% block stylesheets %}
     <style>
-      /* Suppression de tous les effets de focus */
-*:focus {
-    outline: none !important;
-    box-shadow: none !important;
-}
+        /* Suppression de tous les effets de focus */
+        *:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
 
-/* Suppression de l'effet de survol sur la ligne et du curseur */
-.table-hover tbody tr:hover {
-    background-color: transparent !important; /* Pas de changement de fond */
-    cursor: default !important; /* Restaure le curseur par défaut */
-}
+        /* Suppression de l'effet de survol sur la ligne et du curseur */
+        .table-hover tbody tr:hover {
+            background-color: transparent !important;
+            cursor: default !important;
+        }
 
-/* Styles généraux du tableau */
-.table th {
-    text-align: center;
-    vertical-align: middle;
-    font-weight: 600;
-    padding: 1.2rem;
-}
+        /* Styles généraux du tableau */
+        .table th {
+            text-align: center;
+            vertical-align: middle;
+            font-weight: 600;
+            padding: 1rem;
+            background-color: #007bff;
+            color: white;
+        }
 
-/* Gestion du texte tronqué */
-.text-truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 250px;
-}
+        /* Gestion du texte tronqué */
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
 
-/* Styles des boutons */
-.btn-lg {
-    padding: 14px 24px;
-    font-size: 1.2rem;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    border-width: 2px;
-}
+        /* Styles des boutons */
+        .btn-sm {
+            padding: 8px 12px; /* Réduction du padding */
+            font-size: 0.9rem; /* Taille de police plus petite */
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-width: 1px;
+            width: 100px; /* Réduction de la largeur */
+        }
 
-.btn-warning {
-    background-color: #ffc107 !important;
-    border-color: #ffc107 !important;
-    color: #000;
-}
+        .btn-warning {
+            background-color: #ffc107 !important;
+            border-color: #ffc107 !important;
+            color: #000;
+        }
 
-.btn-warning:hover {
-    background-color: #e0a800 !important;
-    border-color: #d39e00 !important;
-}
+        .btn-warning:hover {
+            background-color: #e0a800 !important;
+            border-color: #d39e00 !important;
+        }
 
-.btn-danger {
-    background-color: #ff4d4d !important;
-    border-color: #ff4d4d !important;
-    color: white;
-}
+        .btn-danger {
+            background-color: #ff4d4d !important;
+            border-color: #ff4d4d !important;
+            color: white;
+        }
 
-.btn-danger:hover {
-    background-color: #cc0000 !important;
-    border-color: #b30000 !important;
-}
+        .btn-danger:hover {
+            background-color: #cc0000 !important;
+            border-color: #b30000 !important;
+        }
 
-/* Styles spécifiques */
-.text-white {
-    color: #fff !important;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
+        .btn-primary {
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+            color: white;
+        }
 
-.bg-gradient-dark {
-    background: linear-gradient(90deg, #343a40, #212529);
-}
+        .btn-primary:hover {
+            background-color: #0056b3 !important;
+            border-color: #004085 !important;
+        }
 
-.d-flex.gap-2 {
-    gap: 10px !important;
-}
+        /* Ajustement des icônes */
+        .btn i {
+            font-size: 0.9rem;
+        }
 
-/* Alignement des éléments */
-td .btn {
-    display: inline-block !important;
-    margin: 0 5px !important;
-    width: 150px !important;
-    vertical-align: middle;
-}
+        /* Styles spécifiques */
+        .text-white {
+            color: #fff !important;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
 
-form {
-    display: inline-block !important;
-    margin: 0;
-}
+        .bg-gradient-dark {
+            background: linear-gradient(90deg, #343a40, #212529);
+        }
 
-/* Style de l'alerte vide */
-.alert-info {
-    border-left: 4px solid #17a2b8;
-    background-color: #f8f9fa;
-}
+        .d-flex.gap-2 {
+            gap: 8px !important;
+        }
 
+        /* Alignement des éléments */
+        td .btn {
+            display: inline-block !important;
+            margin: 0 3px !important;
+            vertical-align: middle;
+        }
+
+        form {
+            display: inline-block !important;
+            margin: 0;
+        }
+
+        /* Style de l'alerte vide */
+        .alert-info {
+            border-left: 4px solid #17a2b8;
+            background-color: #f8f9fa;
+        }
+
+        /* Ajustement des badges */
+        .badge {
+            font-size: 0.9rem;
+            padding: 6px 10px;
+        }
     </style>
 {% endblock %}
-
 {% endblock %}

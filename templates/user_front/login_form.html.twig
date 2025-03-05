@@ -2,7 +2,7 @@
     <style>
         /* Global background color for the page */
         body {
-               background-image: url('/front/images/uploads/slider-bg.jpg'); /* Add background image */
+               background-image: url('/Front/images/uploads/slider-bg.jpg'); /* Add background image */
     background-size: cover; /* Ensure the image covers the entire viewport */
     background-position: center center; /* Center the background image */
     background-repeat: no-repeat; /* Prevent image repetition */
@@ -21,7 +21,7 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 100%;
+            height: 60%;
         }
 
         /* Form container specific styles */
@@ -110,6 +110,24 @@
             color: red;
             font-size: 12px;
         }
+.face-login-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Add space above the button */
+    width: 92.5%; /* Make the button full width */
+}
+        .face-login-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
@@ -118,7 +136,7 @@
 {% block body %}
     <div class="login-wrapper">
         <div id="login-content">
-            <h3>Login</h3>
+            <h3>Login to Your Account</h3>
 
             {{ form_start(form) }}
 
@@ -135,6 +153,7 @@
                 </div>
 
                 <button type="submit">Login</button>
+                <a href="{{ path('frontend_face_login') }}" class="face-login-button">Login with your Face</a>
 
             {{ form_end(form) }}
         </div>
