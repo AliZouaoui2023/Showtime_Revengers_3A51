@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -15,6 +16,22 @@ class User
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(name: 'face_token', type: 'string', length: 255, nullable: true)]
+    private ?string $faceToken = null;
+
+    // Other fields...
+
+    public function getFaceToken(): ?string
+    {
+        return $this->faceToken;
+    }
+
+    public function setFaceToken(?string $faceToken): self
+    {
+        $this->faceToken = $faceToken;
+        return $this;
+    }
 
     #[ORM\Column(length: 255)]
     #[Assert\Regex(

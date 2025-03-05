@@ -17,13 +17,41 @@ use Symfony\Component\Validator\Constraints\Image;
 #[Route('/user')]
 final class UserController extends AbstractController
 {
-    #[Route(name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    public function index(Request $request, UserRepository $userRepository): Response
     {
+        // Récupérer les paramètres de recherche depuis la requête
+        $search = $request->query->get('search'); // Nom
+        $email = $request->query->get('email');   // Email
+        $role = $request->query->get('role');     // Rôle
+    
+        // Utiliser la méthode du repository pour filtrer les utilisateurs
+        $users = $userRepository->findByCriteria($search, $email, $role);
+    
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $users,
         ]);
     }
+    
+    #[Route('/stats', name: 'app_user_stats', methods: ['GET'])]
+public function stats(UserRepository $userRepository): Response
+{
+    // Récupérer les utilisateurs groupés par rôle
+    $usersByRole = $userRepository->countUsersByRole();
+
+    // Préparer les données pour le graphique
+    $labels = [];
+    $data = [];
+    foreach ($usersByRole as $row) {
+        $labels[] = $row['role']; // Extraire le rôle
+        $data[] = $row['count'];  // Extraire le compte
+    }
+
+    return $this->render('user/stats.html.twig', [
+        'labels' => json_encode($labels), // Convertir en JSON pour JavaScript
+        'data' => json_encode($data),    // Convertir en JSON pour JavaScript
+    ]);
+}
 
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
