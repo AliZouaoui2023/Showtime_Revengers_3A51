@@ -26,6 +26,8 @@
     <!-- Shortcut Icon -->
     <link rel="shortcut icon" href="../../Back/images/favicon.png" />
 
+    
+
   </head>
  
   <body>
@@ -228,13 +230,14 @@
    
     </div>
           <li class="nav-item menu-items">
-            <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+            <a class="nav-link" href="/films">
               <span class="menu-icon">
                 <i class="mdi mdi-security"></i>
               </span>
-              <span class="menu-title">Films et Projections</span>
+              <span class="menu-title">Films</span>
               <i class="menu-arrow"></i>
             </a>
+            
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
@@ -246,11 +249,11 @@
             </div>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="docs/documentation.html">
+            <a class="nav-link" href="/projection">
               <span class="menu-icon">
                 <i class="mdi mdi-file-document"></i>
               </span>
-              <span class="menu-title">Documentation</span>
+              <span class="menu-title">Projections</span>
             </a>
           </li>
         </ul>
@@ -451,20 +454,32 @@
           </div>
         </nav>
         <!-- partial -->
-        {% block body %}
+       
         <div class="main-panel">
         
         
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
-         
+        
+{% block body %}
+   
+{% endblock %}
+
+
           <!-- partial -->
         </div>
-           {% endblock %}
+
+     
+           
+
+           <div>{% block javascriptss %}
+        <!-- Default scripts can go here -->
+    {% endblock %}</div>
         <!-- main-panel ends -->
 
       
       </div>
+      
     
       <!-- page-body-wrapper ends -->
     </div>

@@ -1,0 +1,25 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Recherche de films{% endblock %}
+
+{% block body %}
+    <h1>Recherche de films</h1>
+
+    {{ form_start(form, {'attr': {'class': 'search-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Rechercher</button>
+    {{ form_end(form) }}
+
+    <h2>Résultats :</h2>
+    {% if films is empty %}
+        <p>Aucun film trouvé.</p>
+    {% else %}
+        <ul>
+            {% for film in films %}
+                <li>
+                    <strong>{{ film.NomFilm }}</strong> - Réalisé par {{ film.Realisateur }} ({{ film.Genre }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'Front/base.html.twig' %}
+
+{% block title %}Nos Films{% endblock %}
+
+{% block body %}
+<div class="container-fluid text-light" style="background-color: #0b0f19; padding: 20px; min-height: 100vh;">
+    <h1 class="text-center text-warning">🎬 Nos Films</h1>
+
+    <div class="row">
+        {% for film in films %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 d-flex">
+                <div class="card mb-4 shadow flex-fill" style="background-color: #111827; color: white; border: none;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-light">{{ film.NomFilm }}</h5>
+                        <p class="card-text"><strong class="text-warning">Réalisateur :</strong> {{ film.Realisateur }}</p>
+                        <p class="card-text"><strong class="text-warning">Genre :</strong> {{ film.Genre }}</p>
+
+                        <!-- Reservation Button -->
+                        <a href="{{ path('app_qr_code', {'data': film.NomFilm}) }}" class="btn btn-success mt-3">
+                            📲 Réserver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center text-danger">Aucun film disponible.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Button to navigate to films page -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_films_index') }}" class="btn btn-warning text-dark">
+            Voir tous les films
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -3,18 +3,19 @@
 {% block title %}Liste des Demandes{% endblock %}
 
 {% block body %}
-
 <div class="container-fluid px-4">
     <div class="card shadow mb-4">
-    <br></br><br></br>
+        <br><br>
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h4 class="card-title mb-0 text-primary">Liste des Demandes</h4>
+            <h4 class="card-title mb-0 text-primary">Liste des Demandesss</h4>
             <a href="{{ path('app_demande_new') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>Nouvelle demande
             </a>
         </div>
         <div class="card-body">
-            <p class="card-description mb-4"> liste des demandes dans le système.</p>
+            <p class="card-description mb-4">Liste des demandes dans le système.</p>
+            
+            {# Tableau des demandes #}
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-bordered">
                     <thead class="table-light">
@@ -75,8 +76,6 @@
                                        title="Modifier">
                                         Modifier
                                     </a>
-
-                                    {# Affichage du bouton "Valider" uniquement si le statut est "en_attente" #}
                                     {% if demande.statut == 'en_attente' %}
                                         <button type="button" class="btn btn-success w-100" 
                                                 title="Valider"
@@ -84,7 +83,6 @@
                                             Valider
                                         </button>
                                     {% endif %}
-
                                     <form action="{{ path('app_demande_delete', {'id': demande.id}) }}" 
                                           method="post" 
                                           class="d-inline">
@@ -110,6 +108,150 @@
                     {% endfor %}
                     </tbody>
                 </table>
+            </div>
+
+            {# Pagination avec KnpPaginatorBundle #}
+            <div class="navigation mt-4 d-flex justify-content-center">
+                {{ knp_pagination_render(demandes) }}
+            </div>
+
+            {# Section Statistiques pour les Types #}
+            <div class="mt-5">
+                <h5 class="text-primary mb-3">Statistiques des Types de Demandes</h5>
+                <div class="row">
+                    {% set stats = {'integrefilm': 0, 'footerWeb': 0, 'backdrop': 0} %}
+                    {% for demande in demandes %}
+                        {% if demande.type == 'integrefilm' %}
+                            {% set stats = stats|merge({'integrefilm': stats.integrefilm + 1}) %}
+                        {% elseif demande.type == 'footerWeb' %}
+                            {% set stats = stats|merge({'footerWeb': stats.footerWeb + 1}) %}
+                        {% elseif demande.type == 'backdrop' %}
+                            {% set stats = stats|merge({'backdrop': stats.backdrop + 1}) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set total = stats.integrefilm + stats.footerWeb + stats.backdrop %}
+                    
+                    {# Affichage des stats sous forme de cartes #}
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Integrefilm</h6>
+                                <p class="card-text">
+                                    {{ stats.integrefilm }} demande(s)
+                                    {% if total > 0 %}
+                                        ({{ (stats.integrefilm / total * 100)|round(1) }}%)
+                                    {% else %}
+                                        (0%)
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">FooterWeb</h6>
+                                <p class="card-text">
+                                    {{ stats.footerWeb }} demande(s)
+                                    {% if total > 0 %}
+                                        ({{ (stats.footerWeb / total * 100)|round(1) }}%)
+                                    {% else %}
+                                        (0%)
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Backdrop</h6>
+                                <p class="card-text">
+                                    {{ stats.backdrop }} demande(s)
+                                    {% if total > 0 %}
+                                        ({{ (stats.backdrop / total * 100)|round(1) }}%)
+                                    {% else %}
+                                        (0%)
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Diagramme circulaire pour les Types #}
+                {% if total > 0 %}
+                    <div class="mt-4 d-flex justify-content-center">
+                        <div style="width: 700px; height: 500px;">
+                            <canvas id="demandeTypeChart" width="350" height="175"></canvas>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-info-circle me-2"></i>Aucune donnée disponible pour le diagramme.
+                    </div>
+                {% endif %}
+            </div>
+
+            {# Section Statistiques pour les Statuts (En Attente et Approuvée uniquement) #}
+            <div class="mt-5">
+                <h5 class="text-primary mb-3">Statistiques des Statuts des Demandes</h5>
+                <div class="row">
+                    {% set statusStats = {'en_attente': 0, 'approuvee': 0} %}
+                    {% for demande in demandes %}
+                        {% if demande.statut == 'en_attente' %}
+                            {% set statusStats = statusStats|merge({'en_attente': statusStats.en_attente + 1}) %}
+                        {% elseif demande.statut == 'approuvee' %}
+                            {% set statusStats = statusStats|merge({'approuvee': statusStats.approuvee + 1}) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set statusTotal = statusStats.en_attente + statusStats.approuvee %}
+                    
+                    {# Affichage des stats des statuts sous forme de cartes #}
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">En Attente</h6>
+                                <p class="card-text">
+                                    {{ statusStats.en_attente }} demande(s)
+                                    {% if statusTotal > 0 %}
+                                        ({{ (statusStats.en_attente / statusTotal * 100)|round(1) }}%)
+                                    {% else %}
+                                        (0%)
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Approuvée</h6>
+                                <p class="card-text">
+                                    {{ statusStats.approuvee }} demande(s)
+                                    {% if statusTotal > 0 %}
+                                        ({{ (statusStats.approuvee / statusTotal * 100)|round(1) }}%)
+                                    {% else %}
+                                        (0%)
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Diagramme circulaire pour les Statuts #}
+                {% if statusTotal > 0 %}
+                    <div class="mt-4 d-flex justify-content-center">
+                        <div style="width: 700px; height: 500px;">
+                            <canvas id="demandeStatusChart" width="350" height="175"></canvas>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-info-circle me-2"></i>Aucune donnée disponible pour le diagramme.
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -139,24 +281,143 @@
 {% endfor %}
 
 {% block stylesheets %}
-
     <style>
-        /* Garder la couleur du texte en blanc pour toutes les cellules */
         .table td, .table th {
-            color: white !important; /* Force la couleur du texte en blanc */
+            color: white !important;
         }
-
-        /* Rendre les lignes de tableau légèrement grises au survol */
         .table tbody tr:hover {
-            background-color: #f1f1f1; /* Changer la couleur de fond au survol */
+            background-color: #f1f1f1;
         }
-
-        /* Garder la couleur du texte en blanc même lors du survol ou du clic */
         .table tbody td:hover, .table tbody tr:hover {
-            color: white !important; /* Garder la couleur du texte en blanc */
-            background-color: #f1f1f1 !important; /* Couleur de fond au survol */
+            color: white !important;
+            background-color: #f1f1f1 !important;
+        }
+        .card.bg-light {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .card.bg-light .card-title,
+        .card.bg-light .card-text {
+            color: #333 !important;
+        }
+        /* Style pour la pagination de KnpPaginatorBundle */
+        .pagination {
+            justify-content: center;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination .active a {
+            background-color: #4e73df !important;
+            border-color: #4e73df !important;
+            color: white !important;
+        }
+        .pagination a {
+            color: #4e73df;
+            padding: 8px 16px;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background-color: #f1f1f1;
+            text-decoration: none;
         }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Diagramme pour les Types
+            const typeCtx = document.getElementById('demandeTypeChart').getContext('2d');
+            const typeChartData = {
+                labels: ['Integrefilm', 'FooterWeb', 'Backdrop'],
+                datasets: [{
+                    label: 'Types de Demandes',
+                    data: [
+                        {{ stats.integrefilm }},
+                        {{ stats.footerWeb }},
+                        {{ stats.backdrop }}
+                    ],
+                    backgroundColor: [
+                        'rgba(78, 115, 223, 0.8)',  // Bleu (correspond à #4e73df)
+                        'rgba(54, 162, 235, 0.8)',  // Cyan
+                        'rgba(255, 159, 64, 0.8)'   // Orange
+                    ],
+                    borderColor: [
+                        'rgba(78, 115, 223, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            new Chart(typeCtx, {
+                type: 'pie',
+                data: typeChartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#fff'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Répartition des Types de Demandes',
+                            color: '#fff'
+                        }
+                    }
+                }
+            });
+
+            // Diagramme pour les Statuts (En Attente et Approuvée uniquement)
+            const statusCtx = document.getElementById('demandeStatusChart').getContext('2d');
+            const statusChartData = {
+                labels: ['En Attente', 'Approuvée'],
+                datasets: [{
+                    label: 'Statuts des Demandes',
+                    data: [
+                        {{ statusStats.en_attente }},
+                        {{ statusStats.approuvee }}
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 193, 7, 0.8)',   // Jaune (correspond à bg-warning)
+                        'rgba(40, 167, 69, 0.8)'    // Vert (correspond à bg-success)
+                    ],
+                    borderColor: [
+                        'rgba(255, 193, 7, 1)',
+                        'rgba(40, 167, 69, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            new Chart(statusCtx, {
+                type: 'pie',
+                data: statusChartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#fff'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Répartition des Statuts des Demandes',
+                            color: '#fff'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% endblock %}

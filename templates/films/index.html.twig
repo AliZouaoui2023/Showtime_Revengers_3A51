@@ -1,0 +1,51 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="text-light text-center mb-4">🎬 Liste des Films</h1>
+
+    <table class="table table-dark table-hover text-center">
+        <thead class="thead-light">
+            <tr>
+                <th>Id</th>
+                <th>Nom du Film</th>
+                <th>Date de Production</th>
+                <th>Réalisateur</th>
+                <th>Genre</th>
+                <th>Actions</th>
+            </tr>
+                <div class="text-center mt-3">
+                    <a href="{{ path('app_films_new') }}" class="btn btn-success">➕ Ajouter un Film</a>
+                </div>
+             <a href="{{ path('app_films_search') }}" class="btn btn-primary btn-sm">🔍 Rechercher un film</a>
+                <a href="{{ path('app_films_stats') }}" class="btn btn-success btn-sm">📊 Voir les statistiques</a>
+
+        </thead>
+        <tbody>
+            {% for film in films %}
+                <tr>
+                    <td>{{ film.id }}</td>
+                    <td>{{ film.NomFilm }}</td>
+                    <td>{{ film.DateProduction ? film.DateProduction|date('Y-m-d') : 'Non spécifiée' }}</td>
+                    <td>{{ film.Realisateur }}</td>
+                    <td>{{ film.Genre }}</td>
+                    <td>
+                        <a href="{{ path('app_films_show', {'id': film.id}) }}" class="btn btn-primary btn-sm">🎬 Show</a>
+                        <a href="{{ path('app_films_edit', {'id': film.id}) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+                        <form method="post" action="{{ path('app_films_delete', {'id': film.id}) }}" 
+                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce film ?');" 
+                              style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ film.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm">🗑 Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-warning">Aucun film trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

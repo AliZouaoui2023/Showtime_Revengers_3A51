@@ -1,0 +1,73 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="text-light text-center mb-4">🎥 List des Projections</h1>
+
+    <table class="table table-dark table-hover text-center">
+        <thead class="thead-light">
+            <tr>
+                <th>Id</th>
+                <th>Date de Projection</th>
+                <th>Prix</th>
+                <th>Capacité</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+          <div class="text-center mt-3">
+        <a href="{{ path('app_projection_new') }}" class="btn btn-success">➕ Ajouter une Projection</a>
+    </div>
+        <a href="{{ path('app_projection_search') }}" class="btn btn-primary btn-sm">🔍 Rechercher une projection</a>
+      <a href="{{ path('app_calendar') }}" class="btn btn-primary btn-sm">
+    📅 Voir le Calendrier des Projections
+</a>
+
+        <tbody>
+            {% for projection in projections %}
+                <tr>
+                    <td>{{ projection.id }}</td>
+                    <td>{{ projection.DateProjection ? projection.DateProjection|date('Y-m-d') : 'Non spécifiée' }}</td>
+                    <td>{{ projection.Prix }} DT</td>
+                    <td>{{ projection.Capaciter }}</td>
+                    <td>
+                        <a href="{{ path('app_projection_show', {'id': projection.id}) }}" class="btn btn-primary btn-sm">🎥 Show</a>
+                        <a href="{{ path('app_projection_edit', {'id': projection.id}) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+                        <form method="post" action="{{ path('app_projection_delete', {'id': projection.id}) }}" 
+                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette projection ?');" 
+                              style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ projection.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm">🗑 Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-warning">Aucune projection trouvée</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        if (!calendarEl) {
+            console.error("Calendar element not found!");
+            return;
+        }
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth', // Default view
+            locale: 'fr', // French language
+            events: '/api/projections', // API endpoint for projections
+            eventColor: 'blue', // Default event color
+            eventDisplay: 'block',
+        });
+
+        calendar.render();
+    });
+</script>
+{% endblock %}

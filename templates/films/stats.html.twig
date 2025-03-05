@@ -1,0 +1,46 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Film Statistics{% endblock %}
+
+{% block body %}
+    <h1>Film Statistics by Genre</h1>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <div style="width: 300px; height: 300px; margin: auto;">
+        <canvas id="filmsChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('filmsChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: {{ genres|raw }},
+                datasets: [{
+                    label: 'Number of Films',
+                    data: {{ counts|raw }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',  
+                        'rgba(54, 162, 235, 0.6)',  
+                        'rgba(255, 206, 86, 0.6)',  
+                        'rgba(75, 192, 192, 0.6)',  
+                        'rgba(153, 102, 255, 0.6)', 
+                        'rgba(255, 159, 64, 0.6)'   
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

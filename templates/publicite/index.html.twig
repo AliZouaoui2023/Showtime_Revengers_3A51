@@ -5,7 +5,6 @@
 {% block body %}
     <div class="container-fluid px-4">
         <div class="card shadow mb-4">
-            <br></br><br></br>
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h4 class="card-title mb-0 text-primary">Liste des Publicités</h4>
                 <a href="{{ path('app_publicite_new') }}" class="btn btn-primary">
@@ -46,24 +45,22 @@
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column align-items-center gap-2">
-                                        <a href="{{ path('app_publicite_show', {'id': publicite.id}) }}" 
-                                           class="btn btn-info btn-sm mb-2 w-100" 
+                                        <a href="{{ path('app_publicite_show', {'id': publicite.id}) }}"
+                                           class="btn btn-info btn-sm mb-2 w-100"
                                            title="Voir les détails">
                                             Voir les détails
                                         </a>
-                                        <a href="{{ path('app_publicite_edit', {'id': publicite.id}) }}" 
+                                        <a href="{{ path('app_publicite_edit', {'id': publicite.id}) }}"
                                            class="btn btn-warning btn-sm mb-2 w-100"
                                            title="Modifier">
                                             Modifier
                                         </a>
-
-                                        <!-- Formulaire de suppression -->
-                                        <form action="{{ path('app_publicite_delete', {'id': publicite.id}) }}" 
-                                              method="post" 
+                                        <form action="{{ path('app_publicite_delete', {'id': publicite.id}) }}"
+                                              method="post"
                                               class="d-inline">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ publicite.id) }}">
-                                            <button type="submit" 
-                                                    class="btn btn-danger w-100" 
+                                            <button type="submit"
+                                                    class="btn btn-danger w-100"
                                                     title="Supprimer"
                                                     onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette publicité ?')">
                                                 Supprimer
@@ -86,11 +83,26 @@
                 </div>
             </div>
         </div>
+
+        <!-- 🔹 Calendrier des Publicités -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4 class="card-title text-primary">Calendrier des Publicités</h4>
+            </div>
+            <div class="card-body">
+                <div id="calendar-loading" style="text-align: center; display: none;">
+                    <p>Chargement du calendrier...</p>
+                </div>
+                <div id="calendar"></div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+    <!-- Include FullCalendar CSS using an alternative CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/main.min.css">
     <style>
         .table td, .table th {
             color: white !important;
@@ -105,9 +117,155 @@
             background-color: #f1f1f1 !important;
         }
 
-        /* Ajustement des bordures */
-        .table-bordered td, .table-bordered th {
-            border: 1px solid #ddd !important;
+        /* 🔹 Ajustement du calendrier */
+        #calendar {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            min-height: 500px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #calendar * {
+            visibility: visible !important;
+        }
+
+        @media (max-width: 768px) {
+            #calendar {
+                max-width: 100%;
+                min-height: 400px;
+            }
         }
     </style>
+{% endblock %}
+
+{% block javascriptss %}
+    {{ parent() }}
+    <!-- Importation de FullCalendar using an alternative CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.js"></script>
+
+    <!-- Fallback if CDN fails (optional: you can add a local copy of FullCalendar here) -->
+    <script>
+        if (typeof FullCalendar === 'undefined') {
+            console.warn("FullCalendar CDN failed to load, attempting to load fallback...");
+            document.write('<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></scr' + 'ipt>');
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("Script loaded, initializing calendar...");
+            
+            // Check if FullCalendar is defined
+            if (typeof FullCalendar === 'undefined') {
+                console.error("FullCalendar is not defined - both CDN and fallback failed to load.");
+                return;
+            }
+            console.log("FullCalendar is defined, proceeding...");
+
+            var calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                console.log("Calendar element found!");
+                document.getElementById('calendar-loading').style.display = 'block';
+
+                fetch("{{ path('app_publicite_events') }}")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(events => {
+                        document.getElementById('calendar-loading').style.display = 'none';
+                        console.log("Événements chargés:", events);
+
+                        // Filter out events with null start or end dates
+                        events = events.filter(event => event.start && event.end);
+
+                        var calendar = new FullCalendar.Calendar(calendarEl, {
+                            initialView: 'dayGridMonth',
+                            locale: 'fr',
+                            headerToolbar: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                            },
+                            events: events,
+                            eventColor: '#4e73df',
+                            eventTextColor: '#ffffff',
+                            eventBorderColor: '#2c3e50',
+                            eventClick: function(info) {
+                                console.log("Event clicked, redirecting to:", info.event.url);
+                                window.location.href = info.event.url;
+                                info.jsEvent.preventDefault();
+                            },
+                            eventDidMount: function(info) {
+                                console.log("Event rendered:", info.event.title, info.event.start, info.event.end);
+                            }
+                        });
+
+                        console.log("Calendar initialized, rendering...");
+                        calendar.render();
+                        console.log("Calendar render called.");
+                    })
+                    .catch(error => {
+                        document.getElementById('calendar-loading').style.display = 'none';
+                        console.error('Erreur lors du chargement des événements:', error);
+                        // Fallback: Use hardcoded events if fetch fails
+                        var fallbackEvents = [
+                            {
+                                "title": "Publicité #2",
+                                "start": "2025-02-18",
+                                "end": "2025-03-18",
+                                "url": "/publicite/2"
+                            },
+                            {
+                                "title": "Publicité #7",
+                                "start": "2025-02-21",
+                                "end": "2025-02-22",
+                                "url": "/publicite/7"
+                            },
+                            {
+                                "title": "Publicité #11",
+                                "start": "2025-02-26",
+                                "end": "2025-02-28",
+                                "url": "/publicite/11"
+                            }
+                        ];
+                        console.log("Using fallback events:", fallbackEvents);
+
+                        var calendar = new FullCalendar.Calendar(calendarEl, {
+                            initialView: 'dayGridMonth',
+                            locale: 'fr',
+                            headerToolbar: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                            },
+                            events: fallbackEvents,
+                            eventColor: '#4e73df',
+                            eventTextColor: '#ffffff',
+                            eventBorderColor: '#2c3e50',
+                            eventClick: function(info) {
+                                console.log("Event clicked, redirecting to:", info.event.url);
+                                window.location.href = info.event.url;
+                                info.jsEvent.preventDefault();
+                            },
+                            eventDidMount: function(info) {
+                                console.log("Event rendered:", info.event.title, info.event.start, info.event.end);
+                            }
+                        });
+
+                        console.log("Calendar initialized with fallback events, rendering...");
+                        calendar.render();
+                        console.log("Calendar render called with fallback events.");
+                    });
+            } else {
+                console.log("Calendar element NOT found!");
+            }
+        });
+    </script>
 {% endblock %}

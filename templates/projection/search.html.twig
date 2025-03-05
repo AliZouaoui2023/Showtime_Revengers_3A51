@@ -1,0 +1,28 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Recherche de projections{% endblock %}
+
+{% block body %}
+    <h1>Recherche de projections</h1>
+
+    {{ form_start(form, {'attr': {'class': 'search-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    {{ form_end(form) }}
+
+    <h2>Résultats :</h2>
+    {% if projections is empty %}
+        <p>Aucune projection trouvée.</p>
+    {% else %}
+        <ul>
+            {% for projection in projections %}
+                <li>
+                    <strong>{{ projection.film.nomFilm }}</strong> - 
+                    Projection le {{ projection.dateProjection | date('d/m/Y H:i') }} 
+                    à {{ projection.salle }} 
+                    <a href="{{ path('app_projection_show', {'id': projection.id}) }}" class="btn btn-primary btn-sm">🎬 Voir</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
