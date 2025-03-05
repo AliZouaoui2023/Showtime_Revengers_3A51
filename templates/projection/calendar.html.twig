@@ -1,0 +1,33 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Calendrier des Projections{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center text-warning">📅 Calendrier des Projections</h1>
+    <div id="calendar"></div> {# Conteneur du calendrier #}
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        if (!calendarEl) {
+            console.error("Élément #calendar introuvable !");
+            return;
+        }
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: ['dayGrid'],
+            initialView: 'dayGridMonth',
+            locale: 'fr',
+            events: '/api/projections', // Appel de l'API
+        });
+
+        calendar.render();
+    });
+</script>
+{% endblock %}

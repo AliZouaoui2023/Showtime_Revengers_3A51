@@ -1,0 +1,19 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}🎥 Nouvelle Projection{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card bg-dark text-light p-4 shadow-lg">
+        <h2 class="text-center mb-4">🎥 Créer une Nouvelle Projection</h2>
+
+        <div class="px-3">
+            {{ include('projection/_form.html.twig') }}
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <a href="{{ path('app_projection_index') }}" class="btn btn-secondary">🔙 Retour à la liste</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

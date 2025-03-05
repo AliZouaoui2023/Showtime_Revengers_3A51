@@ -1,0 +1,17 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card bg-dark text-light p-4 shadow-lg">
+        <h2 class="text-center mb-4">🎬 Ajouter un Nouveau Film</h2>
+
+        <div class="card-body">
+            {{ include('films/_form.html.twig') }}
+
+            <div class="text-center mt-3">
+                <a href="{{ path('app_films_index') }}" class="btn btn-secondary">🔙 Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
