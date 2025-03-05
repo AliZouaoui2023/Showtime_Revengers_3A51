@@ -8,6 +8,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
+use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
 
 class DemandeType extends AbstractType
 {
@@ -29,6 +31,14 @@ class DemandeType extends AbstractType
             ->add('admin', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'id',
+            ])
+            ->add('recaptcha', EWZRecaptchaType::class, [
+                'mapped' => false,
+                'constraints' => [
+                    new RecaptchaTrue([
+                        'message' => 'Veuillez valider le captcha'
+                    ])
+                ]
             ])
         ;
     }

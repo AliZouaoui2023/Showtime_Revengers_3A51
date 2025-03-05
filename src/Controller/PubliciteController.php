@@ -6,7 +6,7 @@ use App\Entity\Publicite;
 use App\Form\PubliciteType;
 use App\Repository\PubliciteRepository;
 use App\Repository\DemandeRepository;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -116,4 +116,31 @@ class PubliciteController extends AbstractController
 
         return $this->redirectToRoute('app_publicite_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/publicites/events', name: 'app_publicite_events', methods: ['GET'])]
+    public function getPublicitesEvents(PubliciteRepository $publiciteRepository): JsonResponse
+    {
+        $publicites = $publiciteRepository->findAll();
+        $events = [];
+    
+        foreach ($publicites as $publicite) {
+            // Get the start and end dates
+            $startDate = $publicite->getDateDebut();
+            $endDate = $publicite->getDateFin();
+    
+            // Add one day to the end date for FullCalendar (since end date is exclusive)
+            if ($endDate) {
+                $endDate = (clone $endDate)->modify('+1 day');
+            }
+    
+            $events[] = [
+                'title' => 'Publicité #' . $publicite->getId(),
+                'start' => $startDate ? $startDate->format('Y-m-d') : null,
+                'end' => $endDate ? $endDate->format('Y-m-d') : null,
+                'url' => $this->generateUrl('app_publicite_show', ['id' => $publicite->getId()]),
+            ];
+        }
+    
+        return new JsonResponse($events);
+    }
+    
 }
