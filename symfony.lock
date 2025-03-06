@@ -275,6 +275,9 @@
             "./assets/controllers/hello_controller.js"
         ]
     },
+    "symfony/swiftmailer-bundle": {
+        "version": "v2.3.8"
+    },
     "symfony/translation": {
         "version": "6.4",
         "recipe": {
@@ -300,6 +303,9 @@
             "./config/packages/twig.yaml",
             "./templates/base.html.twig"
         ]
+    },
+    "symfony/ux-chartjs": {
+        "version": "v2.23.0"
     },
     "symfony/ux-turbo": {
         "version": "2.23",

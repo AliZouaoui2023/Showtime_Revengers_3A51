@@ -119,7 +119,7 @@
             <!-- Display the user's photo inside a styled box -->
             <div class="photo-box">
                 {% if user.photo %}
-                    <img src="{{ asset('Back/images/' ~ user.photo) }}" alt="User Photo" class="profile-photo" />
+                    <img src="{{ asset('uploads/images/' ~ user.photo) }}" alt="User Photo" class="profile-photo" />
                 {% else %}
                     <p>No photo available</p>
                 {% endif %}

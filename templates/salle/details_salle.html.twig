@@ -1,0 +1,93 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Détails des Salles{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center align-items-center min-vh-100">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="text-center mt-5 mb-4 fs-3">Détails des Salles</h4>
+
+                        <!-- Champ de recherche -->
+                        <input type="text" id="searchId" class="form-control mb-3" placeholder="Rechercher par ID..." />
+
+                        <!-- Tableau des salles -->
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom de la salle</th>
+                                    <th>Disponibilité</th>
+                                    <th>Type de la salle</th>
+                                    <th>Statut</th>
+                                    <th>Emplacement</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sallesTableBody">
+                                {% for salle in salles %}
+                                    <tr>
+                                        <td>{{ salle.idSalle }}</td>
+                                        <td>{{ salle.nomSalle }}</td>
+                                        <td>{{ salle.disponibilite ? 'Disponible' : 'Indisponible' }}</td>
+                                        <td>{{ salle.typeSalle }}</td>
+                                        <td>{{ salle.statut }}</td>
+                                        <td>{{ salle.emplacement }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <a href="{{ path('table_des_salles') }}" class="btn btn-dark btn-lg w-100">Retour</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block javascripts %}
+        <script>
+  document.getElementById('searchId').addEventListener('input', function () {
+    var searchId = this.value.trim(); // Récupérer l'entrée utilisateur
+
+    if (searchId === '') {
+        location.reload(); // Si vide, recharger la page pour afficher toutes les salles
+        return;
+    }
+
+    var url = '/salles/recherche?id=' + searchId;
+    console.log('URL de la requête:', url); // Vérifie l'URL dans la console
+
+    fetch(url) // Envoi de la requête AJAX
+        .then(response => response.json())
+        .then(data => {
+            var tableBody = document.getElementById('sallesTableBody');
+            tableBody.innerHTML = ''; // Vider le tableau avant de le remplir
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Aucune salle trouvée.</td></tr>';
+                return;
+            }
+
+            data.forEach(salle => {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${salle.idSalle}</td>
+                    <td>${salle.nomSalle}</td>
+                    <td>${salle.disponibilite ? 'Disponible' : 'Indisponible'}</td>
+                    <td>${salle.typeSalle}</td>
+                    <td>${salle.statut}</td>
+                    <td>${salle.emplacement}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Erreur:', error); // Log d'erreur pour voir ce qui se passe
+        });
+});
+
+        </script>
+    {% endblock %}
+{% endblock %}

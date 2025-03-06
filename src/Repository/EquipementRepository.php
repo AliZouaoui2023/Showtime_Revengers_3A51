@@ -40,5 +40,32 @@ class EquipementRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-    
+   
+ 
+
+
+
+   
+public function findAllOrderedByStatut(string $order = 'ASC')
+{
+    return $this->createQueryBuilder('e')
+        ->orderBy('e.etat', $order) // Trie par statut (ASC ou DESC)
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+   
+    // src/Repository/EquipementRepository.php
+
+    public function findById(int $id)
+    {
+        return $this->createQueryBuilder('e')
+            ->where('e.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

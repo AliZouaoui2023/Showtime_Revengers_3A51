@@ -38,7 +38,7 @@ final class SeanceController extends AbstractController
     #[Route('/calendrier', name: 'app_calendrier')]
     public function calendrier(): Response
     {
-        return $this->render('front/calendrier.html.twig');
+        return $this->render('Front/calendrier.html.twig');
     }
 
     #[Route('/test-email', name: 'app_test_email', methods: ['GET'])] // Ajout de la méthode GET

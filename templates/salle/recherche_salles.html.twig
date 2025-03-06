@@ -1,0 +1,69 @@
+{% extends 'Back/base.html.twig' %}
+
+{% block title %}Recherche de Salle{% endblock %}
+
+{% block body %}
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card p-4 w-80 custom-bg">
+            <div class="d-flex justify-content-between mb-90">
+                <a href="{{ path('table_des_equipements') }}" class="btn custom-btn-return">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+                <a href="{{ path('app_salle_new') }}" class="btn custom-btn-return">
+                    <i class="fas fa-plus"></i> Créer une nouvelle salle
+                </a>
+            </div>
+
+            <h4 class="text-center mb-4 custom-text">Table des salles</h4>
+
+            <!-- Formulaire de recherche -->
+            <form id="filterForm" class="d-flex mb-3" method="get" action="{{ path('salle_recherche') }}">
+                <input type="text" class="form-control" name="searchTerm" id="searchInput" placeholder="Rechercher une salle par ID...">
+                <button class="btn btn-outline-success" type="submit">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </form>
+
+            <!-- Tableau pour afficher les résultats -->
+            <table class="table custom-table text-center mx-auto" style="max-width: 90%;">
+                <thead class="custom-thead">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom de la salle</th>
+                        <th>Disponibilité</th>
+                        <th>Type de la salle</th>
+                        <th>Statut</th>
+                        <th>Emplacement</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for salle in salles %}
+                        <tr>
+                            <td>{{ salle.idSalle }}</td>
+                            <td>{{ salle.nomSalle }}</td>
+                            <td>{{ salle.disponibilite }}</td>
+                            <td>{{ salle.typeSalle }}</td>
+                            <td>{{ salle.statut }}</td>
+                            <td>{{ salle.emplacement }}</td>
+                            <td>
+                                <a href="{{ path('app_salle_edit', {'id': salle.idSalle}) }}" class="btn btn-light btn-sm px-4 shadow-sm">Modifier</a>
+                                <button type="button" class="btn btn-outline-light border-white px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ salle.idSalle }}">Supprimer</button>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center custom-text">Aucune salle trouvée.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+           
+           
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

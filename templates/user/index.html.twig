@@ -65,7 +65,7 @@
                                 <td style="padding: 8px; border: 1px solid #ddd;">{{ user.motDePasse }}</td>
                                 <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
                                     {% if user.photo %}
-                                        <img src="{{ asset('Back/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto; border-radius: 50%;">
+                                        <img src="{{ asset('uploads/images/' ~ user.photo) }}" alt="User Photo" style="width: 50px; height: auto; border-radius: 50%;">
                                     {% else %}
                                         <span>No photo</span>
                                     {% endif %}

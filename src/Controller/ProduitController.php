@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Produit;
-use App\Entity\Commande;
 use App\Form\ProduitType;
 use App\Repository\ProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,39 +29,34 @@ final class ProduitController extends AbstractController
         $produit = new Produit();
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
-    
+
             if ($imageFile) {
-                // Générer un nom unique pour l'image
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
-    
-                // Déplacer le fichier dans le dossier images
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
                 try {
                     $imageFile->move(
                         $this->getParameter('images_directory'),
                         $newFilename
                     );
-    
-                    // Enregistrer le nom de l'image dans l'entité
                     $produit->setImage($newFilename);
                 } catch (\Exception $e) {
-                    $this->addFlash('error', 'Une erreur est survenue lors du téléchargement de l\'image.');
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
                     return $this->redirectToRoute('app_produit_new');
                 }
             } else {
-                // Si aucune image n'est fournie, on peut définir une valeur par défaut
-                // ou ne pas remplir le champ "image" si cela est autorisé
-                $produit->setImage('default_image.jpg'); // Exemple d'image par défaut
+                $produit->setImage('default_image.jpg'); // Image par défaut
             }
-    
+
             $entityManager->persist($produit);
             $entityManager->flush();
-    
-            return $this->redirectToRoute('app_produit_index'); // Redirection après l'ajout
+
+            return $this->redirectToRoute('app_produit_index');
         }
-    
+
         return $this->render('produit/new.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -85,32 +79,49 @@ final class ProduitController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_produit_index');
         }
 
         return $this->render('produit/edit.html.twig', [
             'produit' => $produit,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_produit_delete', methods: ['POST'])]
     public function delete(Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->request->get('_token'))) {
-            // Supprimer l'image si elle existe avant de supprimer le produit
-            $imagePath = $this->getParameter('images_directory').'/'.$produit->getImage();
-            if (file_exists($imagePath)) {
-                unlink($imagePath); // Supprimer le fichier image
+        if ($this->isCsrfTokenValid('delete' . $produit->getId(), $request->request->get('_token'))) {
+            $imagePath = $this->getParameter('images_directory') . '/' . $produit->getImage();
+
+            if ($produit->getImage() && file_exists($imagePath) && $produit->getImage() !== 'default_image.jpg') {
+                unlink($imagePath);
             }
 
             $entityManager->remove($produit);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_produit_index');
     }
 
-
+    #[Route('/produit/search', name: 'app_produit_search', methods: ['GET'])]
+    public function search(Request $request, ProduitRepository $produitRepository): Response
+    {
+        // Récupération des paramètres de recherche
+        $search = $request->query->get('search', '');
+        $sort = $request->query->get('sort', 'nom');
+        $direction = $request->query->get('direction', 'ASC');
+    
+        // Recherche et tri des produits
+        $produits = $produitRepository->searchAndSortProducts($search, $sort, $direction);
+    
+        return $this->render('produit/index.html.twig', [
+            'produits' => $produits,
+            'search' => $search,
+            'sort' => $sort,
+            'direction' => $direction,
+        ]);
+    }
     
 }

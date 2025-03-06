@@ -40,4 +40,21 @@ class ProduitRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function searchAndSortProducts(string $search, string $sort, string $direction)
+    {
+        $qb = $this->createQueryBuilder('p');
+    
+        if (!empty($search)) {
+            $qb->andWhere('p.nom LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+    
+        $allowedSortFields = ['nom', 'prix'];
+        if (in_array($sort, $allowedSortFields)) {
+            $qb->orderBy('p.' . $sort, $direction);
+        }
+    
+        return $qb->getQuery()->getResult();
+    }    
+    
 }

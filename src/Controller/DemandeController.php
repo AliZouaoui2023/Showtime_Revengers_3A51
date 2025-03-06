@@ -61,7 +61,7 @@ final class DemandeController extends AbstractController
         $demandes = $demandeRepository->findBy(['user' => $userId]);
     
         // Renvoyer les demandes uniquement pour l'utilisateur connecté
-        return $this->render('demande/indexdemande.html.twig', [
+        return $this->render('Front/support.html.twig', [
             'demandes' => $demandes,
         ]);
     }

@@ -5,60 +5,86 @@
 {% block body %}
 
     <div class="container mt-4">
-    <h1 class="card-title mb-3 text-center">🛍️Liste des Produits</h1>
+        <h1 class="card-title mb-3 text-center">🛍️ Liste des Produits</h1>
+<form method="get" action="{{ path('app_produit_search') }}" class="mb-4">
+    <div class="row g-2">
+        <!-- Champ de recherche -->
+        <div class="col-md-6">
+            <input type="text" name="search" class="form-control" 
+                   value="{{ search|default('') }}" placeholder="Rechercher un produit...">
+        </div>
 
-    <div class="card shadow-sm p-4">
+        <!-- Tri par -->
+        <div class="col-md-3">
+            <select name="sort" class="form-select">
+                <option value="nom" {% if sort|default('nom') == 'nom' %}selected{% endif %}>Nom</option>
+                <option value="prix" {% if sort|default('nom') == 'prix' %}selected{% endif %}>Prix</option>
+            </select>
+        </div>
 
-                <div class="table-responsive">
-                    {% if produits is not empty %}
-                        <table class="table table-hover align-middle">
-                            <thead class="table-dark">
+        <!-- Direction -->
+        <div class="col-md-3">
+            <select name="direction" class="form-select">
+                <option value="ASC" {% if direction|default('ASC') == 'ASC' %}selected{% endif %}>Croissant</option>
+                <option value="DESC" {% if direction|default('ASC') == 'DESC' %}selected{% endif %}>Décroissant</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Rechercher</button>
+    </div>
+        <div class="mb-3 text-end">
+        <a href="{{ path('statistiques_produits') }}" class="btn btn-primary">
+            📊 Voir Statistiques
+        </a>
+    </div>
+</form>
+        <div class="card shadow-sm p-4">
+            <div class="table-responsive">
+                {% if produits is not empty %}
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Prix (TND)</th>
+                                <th>Catégorie</th>
+                                <th>Description</th>
+                                <th>Image</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for produit in produits %}
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nom</th>
-                                    <th>Prix (TND)</th>
-                                    <th>Catégorie</th>
-                                    <th>Description</th>
-                                    <th>Image</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
+                                    <td>{{ produit.id }}</td>
+                                    <td>{{ produit.nom }}</td>
+                                    <td>{{ produit.prix|number_format(2, '.', ',') }}</td>
+                                    <td>{{ produit.categorie }}</td>
+                                    <td>{{ produit.description|slice(0, 50) ~ '...' }}</td>
+                                    <td>
+                                        {% if produit.image %}
+                                            <img src="{{ asset('uploads/images/' ~ produit.image) }}" alt="{{ produit.nom }}"
+                                                 class="img-thumbnail" width="80">
+                                        {% else %}
+                                            <span class="text-muted">Aucune image</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ produit.date ? produit.date|date("d/m/Y H:i") : 'Non spécifiée' }}</td>
+                                    <td>
+                                        <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-sm btn-info">Afficher</a>
+                                        <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                                        {{ include('produit/_delete_form.html.twig') }}
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {% for produit in produits %}
-                                    <tr>
-                                        <td>{{ produit.id }}</td>
-                                        <td>{{ produit.nom }}</td>
-                                        <td>{{ produit.prix|number_format(2, '.', ',') }}</td>
-                                        <td>{{ produit.categorie }}</td>
-                                        <td>{{ produit.description|slice(0, 50) ~ '...' }}</td>
-                                        <td>
-                                            {% if produit.image %}
-                                                <img src="{{ asset('uploads/images/' ~ produit.image) }}" alt="{{ produit.nom }}" class="img-thumbnail" width="80">
-                                            {% else %}
-                                                <span class="text-muted">Aucune image</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>{{ produit.date ? produit.date|date("d/m/Y H:i") : 'Non spécifiée' }}</td>
-                                        <td>
-                                            <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-sm btn-info">Afficher</a>
-                                            <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
-                                            {{ include('produit/_delete_form.html.twig') }}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p class="text-center text-muted">Aucun produit trouvé.</p>
-                    {% endif %}
-                </div>
-
-
-                    <a href="{{ path('app_produit_new') }}" class="btn btn-primary">Créer un nouveau produit</a>
-                
-
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-center text-muted">Aucun produit trouvé.</p>
+                {% endif %}
             </div>
+
+            <a href="{{ path('app_produit_new') }}" class="btn btn-primary w-100">Créer un nouveau produit</a>
         </div>
     </div>
 

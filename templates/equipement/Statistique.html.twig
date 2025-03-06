@@ -1,18 +1,51 @@
 {% extends 'Back/base.html.twig' %}
 
 {% block title %}Statistiques des équipements{% endblock %}
+
 {% block stylesheet %}
 <style>
     .card-title {
-        color: #000; /* Assure-toi que la couleur est visible */
+        color: #000;
         font-size: 1.25rem;
         font-weight: bold;
-        top-margin:10px
+        margin-top: 10px;
+    }
+
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .chart-container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .row {
+        margin: 0 -15px;
+    }
+
+    .col-md-5, .col-md-8 {
+        padding: 0 15px;
+    }
+
+    h2 {
+        margin-bottom: 30px;
+        font-weight: bold;
+        color: #333;
     }
 </style>
 {% endblock %}
+
 {% block body %}
-    <div class="container d-flex flex-column  mt-5 mb-9 fw-bold justify-content-center align-items-center vh-100">
+    <div class="container d-flex flex-column mt-5 mb-9 fw-bold justify-content-center align-items-center vh-100">
+    
         <h2 class="text-center mb-4">Statistiques des équipements</h2>
 
         <div class="row w-100 d-flex justify-content-center">
@@ -21,59 +54,90 @@
                 <div class="card w-100">
                     <div class="card-body text-center">
                         <h4 class="card-title">Répartition des équipements selon leur état</h4>
-                        <div class="d-flex justify-content-center">
+                        <div class="chart-container">
                             <canvas id="doughnutChart" style="height:250px"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Graphique Pie - Répartition des équipements par état -->
-            <div class="col-md-5 grid-margin stretch-card d-flex justify-content-center mb-4">
-                <div class="card w-100">
+            <!-- Graphique en barres - Répartition des équipements par type -->
+            <div class="col-md-8">
+                <div class="card">
                     <div class="card-body text-center">
-                        <h4 class="card-title">Répartition des équipements (Vue Pie)</h4>
-                        <div class="d-flex justify-content-center">
-                            <canvas id="pieChart" style="height:250px"></canvas>
+                        <h4 class="card-title">Nombre d'équipements par type</h4>
+                        <div class="chart-container">
+                            <canvas id="barChart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+           <br></br><br></br><br></br><br></br>
     </div>
 
-    {% block javascript %}
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Données des équipements
-                const equipementsData = {
-                    enService: {{ equipements_en_service|default(0) }},
-                    horsService: {{ equipements_hors_service|default(0) }},
-                    endommage: {{ equipements_endommage|default(0) }}
-                };
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Données des équipements par état pour le doughnut chart
+            const dataEtat = {
+                labels: ['En service', 'Hors service', 'Endommagé'],
+                datasets: [{
+                    data: [
+                        {{ equipements_en_service }},
+                        {{ equipements_hors_service }},
+                        {{ equipements_endommage }}
+                    ],
+                      backgroundColor: ['#FFD1DC', '#FF69B4', '#FFC0CB'], // Différentes teintes de rose clair
+                    hoverBackgroundColor: ['#FFB3C6', '#D14791', '#FF9EAF'] // Rose clair légèrement plus foncé au survol
+                }]
+            };
 
-                // Labels et données pour le graphique des équipements
-                const labelsEquipements = ["En service", "Hors service", "Endommagé"];
-                const dataEquipements = [equipementsData.enService, equipementsData.horsService, equipementsData.endommage];
-                const colorsEquipements = ["#d9788a", "#a6876d", "#727c84"];
-
-                // Configuration du graphique Doughnut des équipements
-                const chartConfigEquipements = {
-                    type: "doughnut",
-                    data: {
-                        labels: labelsEquipements,
-                        datasets: [{
-                            data: dataEquipements,
-                            backgroundColor: colorsEquipements
-                        }]
+            // Création du doughnut chart
+            new Chart(document.getElementById("doughnutChart"), {
+                type: "doughnut",
+                data: dataEtat,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw + ' équipements';
+                                }
+                            }
+                        }
                     }
-                };
-
-                // Création des graphiques
-                new Chart(document.getElementById("doughnutChart"), chartConfigEquipements);
-                new Chart(document.getElementById("pieChart"), { ...chartConfigEquipements, type: "pie" });
+                }
             });
-        </script>
-    {% endblock %}
+
+            // Données des équipements par type pour le bar chart
+            const labelsTypes = {{ equipements_par_type_labels|json_encode|raw }};
+            const dataTypes = {{ equipements_par_type_values|json_encode|raw }};
+
+            // Création du bar chart
+            new Chart(document.getElementById("barChart"), {
+                type: "bar",
+                data: {
+                    labels: labelsTypes,
+                    datasets: [{
+                        label: "Nombre d'équipements",
+                        data: dataTypes,
+                        backgroundColor: "#D14791"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
 {% endblock %}

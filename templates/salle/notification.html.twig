@@ -1,0 +1,143 @@
+{% block stylesheets %}
+    <style>
+   
+        /* Fond général de la page */
+        body {
+            background-color: #001f3f; /* Bleu marine */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+
+        /* Flèche de retour */
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            color: #000000; /* Noir */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .back-arrow:hover {
+            color: #343a40;
+        }
+
+        .container-card {
+            background-color: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .custom-text {
+            color: #343a40;
+            font-weight: 700;
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .notification-icon {
+            color: red;
+            font-size: 30px;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        .list-group-item {
+            background-color: #f9f9f9;
+            border: 1px solid #e4e4e4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #495057;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-group-item:hover {
+            background-color: #f1f3f5;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            cursor: pointer;
+        }
+
+        .text-muted {
+            font-size: 15px;
+            color: #868e96;
+            font-style: italic;
+        }
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+       </style>
+
+{% endblock %}
+
+{% block content %}
+   
+
+    <div class="container-card">
+     
+    <!-- Flèche de retour -->
+    <a href="{{ path('app_salle_indexx') }}" class="btn custom-btn-return">
+                    <i class="fas fa-arrow-left d-flex justify-content-between mb-90"></i> Retour
+                </a>
+        <h1 class="custom-text">
+    <i class="fas fa-bell notification-icon"></i>
+    Liste des Notifications
+</h1>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if notifications is not empty %}
+                    <ul class="list-group">
+                        {% for notification in notifications %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ notification.message }}</span>
+                                <span class="text-muted">{{ notification.createdAt|date('d/m/Y H:i') }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center text-muted">Aucune notification disponible.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+   
+    <audio id="notification-sound" src="{{ asset('sounds/notification.mp3') }}" preload="auto"></audio>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+        function playNotificationSound() {
+            var audio = new Audio('{{ asset('sounds/notification.mp3') }}');
+            audio.play();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                playNotificationSound();
+            }, 3000);
+        });
+    </script>
+{% endblock %}
